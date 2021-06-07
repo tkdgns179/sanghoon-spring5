@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTMl5 실습</title>
+    <style>
+        table, tr, th, td {
+            border: 1px solid black;
+            font-size: 13px;
+        }
+        /* style의 주석 ctrl + "/" 키조합 */
+        /* table tag의 테두리 이중선을 1개의 선으로 병합 */
+        table {
+            border-collapse: collapse;
+        }
+    </style>
+    <style>
+        header, nav, section, aside, footer {
+            border: 1px dotted black;
+        }
+        header > h1, footer > h1 {
+            text-align: center;
+        }
+        nav { 
+            display: block; 
+            height: 60px ;
+        }
+        nav > ul > li {
+            float: left; 
+            margin-right: 20px;
+        }
+        section { 
+            width: 80%; 
+            display: inline-block; 
+            position: relative;
+        }
+        section > article {
+            margin: 10px 30px;
+            border: 1px solid skyblue;
+        }
+        aside { 
+            width: 19.6%;
+            display: inline-block; 
+            position: absolute; 
+            right: 0;
+            height: 100%;
+        }
+        div#contents {
+            /* 내부의 컨텐츠 기준되는 외부 요소에 관계형 포지션 추가  */
+            position: relative;
+            /* 넘치지 않게 해줌 */
+            overflow: hidden;
+        }
+        /* div.contents class가 contents, div#contents id가 contents */
+    </style>
+</head>
+<body>
+    
+
+    <!-- in-line block : 자기영역만 차지하는 property -->
+    <!-- 
+        HTML5 Layout 구조 
+        header, nav, section, article, aside, footer
+    -->
+    
+
+    <header>
+        <h1>Hello HTML</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#">menu1</a></li>
+            <li><a href="#">menu2</a></li>
+            <li><a href="#">menu3</a></li>
+        </ul>
+    </nav>
+
+    <div id="contents">
+        <section>
+            <h1>section</h1>
+            <article>
+                <h2>article</h2>
+            </article>
+            <article>
+                <h2>article2</h2>
+            </article>
+        </section>
+        <aside>
+            <h2>aside</h2>
+        </aside>
+    </div>
+        
+    <footer>
+        <h2>footer</h2>
+    </footer>
+
+    <hr>
+
+    <!-- 
+        table>(tr>td*5)*3 
+        table tag 제어 : 셀 병합
+        table tr(table row) : 줄, 
+        td(table data) : 칸
+     -->
+    <table>
+        <tr>
+            <th>순번</th>
+            <th>책 이름</th>
+            <th>가격</th>
+            <th>판매량</th>
+            <th>판매액</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>HTML</td>
+            <td>7,000</td>
+            <td rowspan="2">1,000</td>
+            <!-- rowspan 세로칸 병합 -->
+            <td>7,000,000</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>JS</td>
+            <td>7,000</td>
+            <td>7,000,000</td>
+        </tr>
+        <tr>
+            <td colspan="4">합계</td>
+            <!-- colspan 가로칸 병합  -->
+            <td>14,000,000</td>
+        </tr>
+    </table>
+
+    <!-- html5 form tag 사용 // element : form tag(element), input tag(element) -->
+    <!-- action, method : 데이터 자료전송(method-방법 GET or POST),
+         radio/file-동일한 name을 사용, 
+         submit-action 주소로 해당 form 내용을 전송시킴  -->
+    <form action="https://naver.com" method="GET">
+        <input type="text" name="text" id="">
+        <input type="password" name="password" id="">
+        <input type="date" name="date" id="">
+        <input type="color" name="color" id="">
+
+        <!-- radio button 둘 중 하나 선택 -->
+        <input type="radio" name="radio" id="">
+        <input type="radio" name="radio" id=""> 
+        <!-- checkbox 여러 개 선택 -->
+        <input type="checkbox" name="check_box1" id="">
+        <input type="checkbox" name="check_box2
+        
+        <input type="file" name="file" id="">
+        <input type="file" name="file" id="">
+        <textarea name="textarea" id="" cols="30" rows="10"></textarea>
+        <input type="button" value="버튼">
+        <input type="reset" value="입력취소">
+        <input type="submit" value="전송">
+    </form>
+
+    <!-- 유튜브 영상 집어넣기 iframe -->
+    <iframe width="50%" height="500px" src="https://www.youtube.com/embed/wgYGAK0pHks" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+    <hr>
+
+    <!-- 컨텐츠 경로... 상대경로 "."은 현재 폴더를 가르킨다.  -->
+    <img style="width: 100%" src="img/free_image.jpg" alt="엑박일 때 표시할 내용">
+    
+    <!-- 컨텐츠 경로... 절대경로 "/"(루트)로 시작한다  -->
+    <img style="width: 100%" src="/test/img/free_image.jpg" alt="엑박일 때 표시할 내용">
+    <!-- 틀린 경로 alt="description" alt안의 description이 뜬다. -->
+    <img style="width: 100%" src="test/img/free_image.jpg" alt="절대경로 방법이 잘 못 되어있음">
+
+    <!-- 영역 지정 div : division // 가상링크는 #으로 생성  -->
+    <div style="background-color: skyblue;">
+        <a href="#">네이버</a>
+        <a href="#">다음</a>
+        <a href="#">네이트</a>
+    </div>
+
+    <hr>
+
+    <!-- 리스트형 2가지: ol(Ordered List 정렬된, 순서가 매겨진 리스트), ul(Unordered List ) -->
+    <ol type="A"> 
+        <li>ol>li{Hello HTML}*2</li>
+        <li>Hello HTML</li>
+        <li>Hello HTML</li>
+    </ol>
+
+    <ul>
+        <li>ul>li{Hello HTML}*2</li>
+        <li>Hello HTML</li>
+        <li>Hello HTML</li>
+    </ul>
+
+    <hr>
+
+    <!-- H20, X^2 첨자로 보여주기 <sub></sub> 아랫 첨자 <sup></sup> 윗 첨자 -->
+    <p>H<sub>2</sub>0</p>
+    <p>X<sup>2</sup>=4</p>
+
+    <hr>
+
+    <!-- lorem + 문장 길이 => ex) lorem100, lorem20.. -->
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde, illum?</p>
+
+    <!-- 로렘 입숨(립숨)은 작업공간에 채울 내용을 자동으로 생성해주는 기능 -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>국무총리는 국회의 동의를 얻어 대통령이 임명한다. 국회는 헌법개정안이 공고된 날로부터 60일 이내에 의결하여야 하며, 국회의 의결은 재적의원 3분의 2 이상의 찬성을 얻어야 한다.</td>
+                <td>이사부</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>국회의원의 수는 법률로 정하되, 200인 이상으로 한다. 국회는 국정을 감사하거나 특정한 국정사안에 대하여 조사할 수 있으며, 이에 필요한 서류의 제출 또는 증인의 출석과 증언이나 의견의 진술을 요구할 수 있다.</td>
+                <td>박혁거세</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>모든 국민은 거주·이전의 자유를 가진다. 감사원은 세입·세출의 결산을 매년 검사하여 대통령과 차년도국회에 그 결과를 보고하여야 한다. 이 헌법에 의한 최초의 대통령의 임기는 이 헌법시행일로부터 개시한다.</td>
+                <td>성담수</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>국무회의는 대통령·국무총리와 15인 이상 30인 이하의 국무위원으로 구성한다. 국가는 대외무역을 육성하며, 이를 규제·조정할 수 있다. 모든 국민은 자기의 행위가 아닌 친족의 행위로 인하여 불이익한 처우를 받지 아니한다.</td>
+                <td>황희</td>
+            </tr>
+        </tbody>
+        </table>
+
+    
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem quae molestiae quidem iure at aliquid fugiat, consectetur corporis quia, adipisci error unde? Et quas nam cum dolor, quo iure optio.</p>
+
+    <hr>
+
+    <!-- html:5 :콜론, ;세미콜론 --> 
+    <!-- h : 헤더태그 약자 글 제목에 표시 -->
+    <!-- p : 태그는 문단의 약자(Paragraph) -->
+    <!-- 줄바꿈이 이루어지는 영역태그를 블럭영역 -->
+    <!-- 줄바꿈이 이루어지지않는 영역은 인라인블럭 영역 <span> -->
+    <!-- 도메인(사람이 확인) == IP주소(컴퓨터 시스템이 확인) -->
+    <!-- Matching 매칭(묶어줌) - Binding 바인딩(묶어줌)  -->
+    <!-- 색상(color) : red, blue, skyblue...-->
+    <!-- 컴퓨터색상(color) : red의 색상은 #ff(red)-00(green)-00(blue) 빛의 3원색을 조합함 // red의 rgb(255, 0, 0)  [#은 16진수] -->
+    <!-- 예시) 흰색 #ffffff == #fff[약자] = white // white의 rgb(255, 255, 255) -->
+    <!-- 16진수 0, 1, 2... 9, a, b, c, d, e, f = 총 16개 -->
+    <h1>Hello HTML5</h1> 
+    <h2>Hello HTML5</h2>
+    <br>
+    <br>
+    <br>
+    <p>Hello HTML1</p>
+    <p>Hello HTML2</p>
+    <span style="color: red;">Hello HTML1</span>
+    <span style="color: #19ce60;">Hello HTML2 by color picker</span>
+    <span style="color: rgb(255, 255, 0);">Hello HTML3 by rgb func</span>
+    <p>Hello HTML</p>
+    <h3>Hello HTML5</h3>
+    <h4>Hello HTML5</h4>
+    <h5>Hello HTML5</h5>
+    <h6>Hello HTML5</h6>
+
+</body>
+</html>

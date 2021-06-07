@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- 
+		alias(별칭) dataSource로 만듭니다 이유는 여러개의 DB와 호완되게 만들게됩니다 
+		오라클지원, MySQL, Hsql 등 여러 DB서버와 호환되게 만드는데 필요 (아래)
+	-->
+	<alias name="dataSource-oracle_local" alias="dataSource"/>
+	<!-- 로컬(PC) Hsql용 - Heroku Cloud 배포용 드라이버 설정(아래) -->
+	<!-- <bean id="dataSource-hsql_local"></bean> -->
+	
+	
+	<!-- 로컬(PC) 오라클 jdbc 드라이버 설정(아래) -->
+	<!-- 
+	<bean id="dataSource-oracle_local" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" 
+				  value="oracle.jdbc.driver.OracleDriver"></property>
+		<property name="url" 
+				  value="jdbc:oracle:thin:@localhost:1521/XE"></property>
+		<property name="username" value="XE"></property>
+		<property name="password" value="apmsetup"></property>
+	</bean>
+	 -->
+	<!-- 로컬 oracle log4jdbc 드라이버 설정  --> 
+	 <bean id="dataSource-oracle_local" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" 
+				  value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+		<property name="url" 
+				  value="jdbc:log4jdbc:oracle:thin:@localhost:1521/XE"></property>
+		<property name="username" value="XE"></property>
+		<property name="password" value="apmsetup"></property>
+	</bean>
+	
+	<!-- 위 오라클 jdbc빈을 스프링-마이바티스에서 사용(아래) -->
+	<!-- sqlSectionFactory를 bean으로 만듦 : 쿼리를 찍어낼 수 있는 메소드가 있는 클래스 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">	   
+	 	<property name="dataSource" ref="dataSource" />
+	 	<!-- 매퍼 xml로만든 쿼리파일의 경로를 인식하게 함.(아래 classpath경로 src/main/resources/쿼리xml) -->
+	 	 <property name="mapperLocations" value="classpath:mappers/**/oracle/*Mapper.xml"></property>
+	</bean>
+	<!-- 위 sqlSectionFactory를 이용해서 템플릿클래스를 생성(insert(), update(), delete(), 메소드를 사용할 수 있는 클래스  -->
+	<!-- 이름이 section인 이유는 query 접속정보/해제정보를 관리하기 때문에 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+	  <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"></constructor-arg>
+	 </bean>
+	
+	
+</beans>

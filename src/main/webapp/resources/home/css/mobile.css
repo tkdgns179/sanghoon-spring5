@@ -1,0 +1,450 @@
+@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap);
+/* ============================================================================================================= */
+/* 공통 영역 START */
+body { /* body tag만 a tag는 적용 안 됨 */
+    font-family: 'Nanum Gothic', sans-serif !important;
+    font-size: 16px !important; /* important 중요함 => 사용시 body 폰트크기는 무조건 16px로 고정 */
+    letter-spacing: -1px !important;
+    color: #444 !important;
+    word-wrap: break-word !important; /* 단어가 한 개의 단위로 줄 바꿈이 됨 단어가 분리가 되지 않음 ex) bo
+    ok => book 보기 편하게 단어형식으로 줄바꿈 처리함 */
+    line-height: 1 !important; /* 단위가 없으면 배수 => 16px */
+}
+dl, ol, ul { margin-bottom: 0 !important; }
+#container a:hover { color: #000 !important }
+a:link { color: #444;}
+a:hover { color: #fff !important; }
+a:visited { color: #444; }
+a { text-decoration: none; } /* link의 underbar가 사라짐 */
+/* 공통 영역 END */
+/* ============================================================================================================= */
+/* bootstrap.css 수정 START */
+.txt.right {
+    text-align: right !important;
+}
+.mt20 { /* bootstrap의 네이밍과 동일 */
+    margin-top: 20px !important;
+}
+.w100p { /* 너비 크기가 100% */
+    width: 100% !important;
+}
+.clear::after {
+    content: '';
+    clear: both; /* tag의 위치를 지정하는 float:left|right 속성을 초기화 시킴 */
+    display: block; /* float는 block 속성이 없어진 것을  clear시키면, 다시 block속성을 부여 */
+}
+/* bootstrap.css 수정 END */
+/* ============================================================================================================= */
+/* 헤더 영역 START */
+.on { /* 클래스 선택자 */
+    background: #32353d;
+}
+header { /* 태그 선택자 */
+    height: 90px;
+    text-align: center;
+    z-index: 200; /* z-index z의 순서 x(가로 축) y(세로 축) z(수직 축) */
+    /* z-index 값이 클수록 화면 상 위에 배치가 됨 
+    z-index를 200으로 주는 이유 => 다른 객체와 겹칠 수가 있음 ex) slide 이미지와 겹칠 때가 있음
+    메뉴가 가려지는 것을 방지  */
+    background: rgba(0,0,0,0.5); /* a : alpha값, 투명도 크기 => 1은 100% */
+
+    /* relative 다른 태그와 관계(기본값), 위치에서 다른 태그 영향 받지않음 */
+    position: absolute; /* left, right, top, bottom 값을 적용하기 위해 */
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+.box-inner {
+    width: 100%;
+    margin: 0 auto;
+    
+}
+/* 헤더 영역 END */
+/* ============================================================================================================= */
+/* 로고 영역 START */
+.header_area h1 {
+    float: none;
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    padding: 3px 0 0; /* padding: 3px(상하) 0(좌) 0(우); */
+}
+.header_area h1 a { 
+    /* 로고는 이미지인데 글을 더한 이유는 웹 접근성 때문에 추가(스크린리더 : 시각장애인용유틸리티) */
+    display: inline-block;
+    width: 150px;
+    height: 80px;
+    background: url(../img/LogoImage.png) no-repeat; /* css3는 함수를 지원합니다. */
+    background-size: 50px 60px !important; /* 백그라운드 이미지 사이즈 가로 50px 세로 60px */
+    background-position: center center !important; /* 이미지위치가 가로 가운데 세로 가운데 정렬 */
+    text-indent: -9999px; /* 들여쓰기 이미지만 보이고 글자는 숨기기 위치 */
+    overflow: hidden;
+}
+/* 로고 영역 END */
+/* ============================================================================================================= */
+/* 상단 메뉴 영역 START */
+.openMOgnb {
+    /* gnb = global navigation bar 약자 메뉴명칭으로 사용 */
+    display: block;
+    position: absolute;
+    top: 35px;
+    left: 15px;
+    width: 25px;
+    height: 16px;
+}
+.hdd {
+    text-indent: -9999px;
+    position: absolute;
+}
+.openMOgnb span {
+    box-sizing: border-box; /* 박스크기를 테두리 까지의 크기로 고정 */
+    display: block;
+    width: 25px; height: 3px;
+    margin-bottom: 4px;
+    border-radius: 10px;
+    background: #fff;
+}
+.openMOgnb span + span { width: 17px; } /* "+"는 인접 연산자(Sibling) */
+.openMOgnb span:last-child { 
+    width: 25px;
+    margin-bottom: 0px; 
+}
+.header_cont {
+    float: none;
+    width: 100%;
+    background: #31353d;
+    margin-top:36px;
+    display: none;
+    }
+.closePop {
+    display: block;
+    position: absolute;
+    right: 0px;
+    top: 15px;
+}
+.closePop a {
+    display: block;
+    width: 60px; height: 60px;
+    text-indent: -9999px;
+    overflow: hidden;
+    background: url(../img/btn_closeMenu.png) no-repeat;
+    background-size: 60px;
+}
+.util {
+    padding: 20px;
+}
+.header_cont a {
+    color: #fff; font-size: 16px;
+}
+.util li {
+    float: left;
+}
+.util li::after {
+    content: '|';
+    display: inline-block;
+    padding: 0 10px;
+    color: #a2a2a3;
+    font-size: 10px;
+    position: relative;
+    top: -2px;
+}
+.util li:last-child::after {
+    /* 가상선택자 마지막 li태그에 가상요소 추가 */
+    content: '';
+    display: none;
+}
+.gnb {
+    float: none;
+    box-sizing: border-box;
+    padding-top: 0px;
+    height: auto;
+    border-top: 1px solid #83868b;
+}
+.gnb li {
+    float: left;
+    width: 50%;
+    text-align: left;
+    box-sizing: border-box; /* width 50% 안쪽에 테두리 까지 포함 */
+    border-bottom: 1px solid #83868b;
+}
+.gnb li a {
+    display: block;
+    padding: 0px 0px 0px 65px;
+    height: 60px;
+    line-height: 60px;
+    background: url(../img/ico_gnb01.png) no-repeat 10px center; /* 10px 가로 위치, center 세로 가운데 정렬 */
+    background-size: 49px 56px;
+}
+.gnb_depth {
+    /* 2차 서브메뉴 */
+    display: none;
+}
+.gnb li + li a { /* 1차(대메뉴) li 태그중 2번째영역 */
+    background-image: url(../img/ico_gnb02.png);	
+}
+.gnb li + li + li a { /* 1차(대메뉴) li 태그중 3번째영역 */
+    background-image: url(../img/ico_gnb02.png);	
+}
+.gnb li + li + li + li a { /* 1차(대메뉴) li 태그중 4번째영역 */
+    background-image: url(../img/ico_gnb02.png);	
+}
+.gnb li:nth-child(2n+1) {
+/* 2n+1 홀수번째의 li태그를 말함 */
+border-right: 1px solid #83868b;
+}   
+/* 상단 메뉴 영역 END */
+
+/* 본문 컨테이너 영역 START*/
+#container, footer, .hdd, .quick_area {
+    text-align: center;
+}
+#container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 30px;
+}
+/* 본문 컨테이너 영역 END*/
+/* 갤러리 최근 게시물 영역 START */
+.about_area h2 {
+    font-size: 20px;
+    padding: 27px 0 25px; /* 1,상하 2,좌 3,우 */
+}
+.about_area h2 b {
+    display: block; /* 1개 라인의 영역 모두 차지 */
+    padding-top: 10px;
+}
+.about_box { background-color: #fff; }
+.place_list li {
+    float: none;
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0px 20px;
+}
+.place_list li img {
+    width: 100%; /* 가로 크기를 반응형으로 만들려면 퍼센트로 표시 */
+}
+.place_list li h3 {
+    font-weight: bold;
+    font-size: 18px;
+    padding-top: 25px;
+}
+.place_list p.txt {
+    padding: 10px 50px 30px;
+    line-height: 1.4;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+    word-break: keep-all;
+    color: #666;
+}
+.place_list li .view {
+    padding-bottom: 10px;
+    margin: 0px 0px 30px;
+    display: inline-block;
+    padding-top: 5px;
+    border-top: 2px solid #333;
+    color: #333;
+}
+/* 갤러리 최근 게시물 영역 END */
+/* ============================================================================================================= */
+/* 공지사항 최근 게시물 영역 START*/
+.app_line { display: none; } /* 반응형 => 테블릿 또는 PC 전용 컨텐츠 */
+.appbbs_area {
+    padding: 0px 20px;
+    text-align: left;
+}
+.bbs_line {
+    float: none;
+    width: 100%;
+    padding: 20px 0px;
+    border-top: 1px solid #d6d7d8;
+}
+.bbs_line h3 {
+    font-weight: bold;
+    font-size: 19px;
+}
+.bbs_line .notice_recent {
+    padding-top: 10px;
+}
+.bbs_line .notice_recent li {
+    padding: 8px 0px;
+}
+/* 공지사항 최근 게시물 영역 END*/
+/* ============================================================================================================= */
+/* 슬라이드 영역 START */
+.main_rolling_pc {
+    display: block;
+}
+.visualRoll {
+    position: relative;
+    width: 100%;
+}
+.gList {
+    position: relative;
+    width: 100%;
+}
+/* ul tag의 className이 viewImgList인 영역의 li tag */
+ul.viewImgList li {
+    text-align: center;
+    height: 300px;
+    line-height: 550px;
+    background-size: cover; /* cover : 배경 이미지의 크기를 꽉 채움  */
+    width: 100%;
+}
+.roll_content a img {
+    display: none;
+}
+li.imglist0 {
+    position: relative;
+    z-index: 50;
+    background: url(../img/slide1.jpg) no-repeat;
+}
+li.imglist1 {
+    position: absolute;
+    z-index: 10;
+    left:0 ; top:0;
+    background: url(../img/slide2.jpg) no-repeat;
+}
+li.imglist2 {
+    position: absolute;
+    z-index: 10;
+    left:0; top:0;
+    background: url(../img/slide3.jpg) no-repeat;
+}
+.roll_content {
+    position: static;
+}
+.roll_content .roll_txtline {
+    position: absolute;
+    left: 0;
+    bottom: 60px; /* roll_content하단에서 60px 위에 위치 */
+    line-height: 1;
+    text-align: center;
+    width: 100%;
+    font-size: 22px;
+    color: #fff;
+    letter-spacing: 2px;
+}   
+.rollbtnArea {
+    position: absolute; /* 기준위치에서 고정시켜놓음 */
+    width: 100%;
+    left: 0px;
+    bottom: 25px;
+    z-index: 200;
+}
+.rollingbtn {
+    width: 320px;
+    margin: 0 auto; /* 버튼영역에 5개 들어가고 가운데 정렬 */
+    text-align: center;
+}
+.rollingbtn li.butt0 {
+    margin-left: 10px;
+}
+.rollingbtn li {
+    display: inline-block;
+    margin-left: 5px;
+}
+.rollingtn li a {
+    vertical-align: top; /* 세로 정렬, img하고 다른 태그 사용시 다른 태그의 세로 정렬 */
+}
+/* 슬라이드 영역 END*/
+/* ============================================================================================================= */
+/* 푸터스타일 지정  START */
+footer {
+    border-top: 1px solid #ddd;
+    text-align: left;
+}
+.foot_area {
+    box-sizing: border-box;
+    padding: 0px 20px 90px; /* 모바일에서는 의미없고, 테블릿  이상에서 의미있는 스타일 */
+    position: relative; /* relative가 있다는 것은 foot_area안 쪽에 태그의 기준으로 사용한다는 의미 */
+}
+.foot_list {
+    padding-top: 25px;
+}
+.foot_list li {
+    float: left; /* 세로 배치 컨텐츠를 가로로 배치할 때 사용 */
+}
+.foot_list li:first-child::after {
+    content: '|';
+    display: inline-block;
+    padding: 0px 10px;
+    font-size: 10px;
+    position: relative;
+    top: -2px;
+}
+.foot_list li a {
+    font-weight: bold;
+    font-size: 15px;
+}
+.foot_list li a:hover {
+    color: black !important;
+}
+.foot_area h2 {
+    padding-top: 15px;
+    font-size: 14px; /* px : 픽셀(pixel) html크기 단위, 기타 단위 : em, rem(root em) */ 
+    color: #666;
+}
+.addr {
+    line-height: 1.3; /* 줄 간격 1.3배 */
+    font-size: 14px;
+    color: #767676;
+    padding-top: 5px;
+}
+.br_line { 
+    display: block;
+ } /* block 영역은 1줄 모두 자리차지 == 엔터 == 줄바꿈 */
+.copy {
+    padding: 3px 0px 20px;
+    font-size: 14px;
+    color: #767676;
+}
+.snslink {
+    position: static; /* <다른 태그를 기준으로> static 고정값, relative 상댓값 */
+    width: 250px;
+    margin: 10px auto; /* 10px 상하여백, 좌우 가운데 정렬  */
+}
+.snslink li:first-child {
+    margin-left: 0px;
+}
+.snslink li {
+    margin-left: 30px;
+    float: left; /* 세로 배치를 가로 배치로 */
+}
+.snslink li a {
+    display: block;
+    width: 50px;
+    height: 74px;
+    text-indent: -9999px;  /* 웹 접근성(시각장애인용 구현) */
+    background: url(../img/ico_blog_r.png) no-repeat;
+    overflow: hidden;
+}
+.snslink li + li a { /* 인접(형제 : sibling) 연산자 */
+    background: url(../img/ico_facebook_r.png) no-repeat; 
+}
+.snslink li + li + li a {
+    background: url(../img/ico_instargram_r.png) no-repeat;
+}
+/* 푸터스타일 지정  END */
+/* ============================================================================================================= */
+/* 퀵메뉴 영역 START */
+.to_top {
+    position: fixed; /* 마우스를 스크롤해도 항상 그 자리 고정되어 있음 */
+    right: 20px;
+    bottom: 100px;
+    text-align: center;
+    background: none;
+    z-index: 100; /* 슬라이드 이미지 : 200 보다는 아래이기 때문에 겹치면 안 보임 */
+}
+.to_top a {
+    display: block;
+    width: 45px;
+    height: 45px;
+    background: url(../img/ico_totop_mo.png) no-repeat;
+    background-size: 45px;
+    text-indent: -9999px;
+    overflow: hidden;
+}
+/* 퀵메뉴 영역 END */

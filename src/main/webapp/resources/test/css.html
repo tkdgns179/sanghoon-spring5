@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- 페이지 언어 설정 : Unicode Type Format - 8bit 의 약자 -->
+    <!-- 다국어 지원 사이트에서 필수 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS 실습</title>
+    <!-- 나눔고딕 외부 글꼴 사용하기 -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@700&display=swap" rel="stylesheet">  
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        /* 
+            vs code에서 ctrl 누르고 링크에 커서를 대면 링크이동 가능
+            03 선택자(selector) 종류
+            universal 선택자 <모든 선택자> : * (별표 : asterisk)
+            tag 선택자 : h1, h2, p, div, ...
+            class 선택자 : .className <특징:중복 사용 가능>
+            id 선택자 : #idName <특징:중복 사용시 오동작>
+            가상(pseudo) 선택자 :  ::after, (::before or :before)
+            가상(pseudo) 요소(element) : :hover   
+            ex) 사용예시 a:hover : a태그에 마우스를 hover했을 때
+         */
+
+         div > * {
+             /* color: red; */
+         }
+
+         h1 {
+             background-color: skyblue;
+         }
+        
+         .box-one, .box-two {
+            background-color: tomato;
+         }
+
+         #box-four, #box-five {
+             background-color: yellow;
+         }
+         
+         /* 가상 선택자 */
+         .box-one > p::after {
+             content: 'add';
+             color: black;
+         }
+
+         /* 콜론 하나만 해도 적용이 됨 */
+         .box-one > p:before {
+             content: 'add';
+             color: green;
+         }
+         
+         /* 가상 요소 */
+         a:hover {
+            color: white;
+        }
+        /* 
+            크기 단위 font 크기, img 크기, 유튜브 영상 크기
+            ~px, ~em(1, 2배수), ~rem(root기반 배수) 
+        */
+
+        .box-one {
+            font-size: 8px;
+            /* font-size: 1em; 웹 브라우저 기본 폰트크기는 16px = 1em */
+            /* font-size: 1.5em; */
+            /* font-size: 1.5rem; */
+        }
+
+        .box-one > p {
+            /* 웹 브라우저 기본폰트인 16px의 1.5배가 아니고, 부모요소의 1.5배(8px * 1.5) .box-one의 font-size가 8px로 위에 선언됨*/
+            font-size: 1.5em;
+
+            /* 1.5rem = 16px * 1.5 */
+            font-size: 1.5rem;
+            
+            /* 위에서 부터 해석하는 방식 = 인터프리터 방식 => 자바스크립트 = 인터프리터형 언어 */
+        }
+
+        .box-one {
+            width: 200px;
+            height: 200px;
+            background-color: green;
+            /* 
+            4가지 방향 12시부터 시계방향으로 ex) margin: 1px[상] 2px[우] 3px[하] 4px[좌];
+            2가지 방향 상하 좌우 ex) margin: 2px[상하] 4px[좌우];
+            */
+            padding: 20px; /* 안쪽 여백 */
+            margin: 10px 20px 30px 40px; /* 바깥 여백 */
+            margin: 30px 60px; /* 30px 상하 60px 좌우 */
+            box-sizing: border-box;
+            /* border: 10px solid black; */
+
+            /* 가운데 정렬 */
+            margin: 0px;
+            margin: 0px auto; /* 0 상하, auto 좌우 */
+
+            /* 기본 position: relative; */
+            margin: 0px;
+            position: absolute; /* 자리가 다른 태그와 관련없는 위치를 가짐 */
+            position: fixed; /* 스크롤을 해도 박스가 고정됨 => 고정 위치 */
+            margin-left: 20px;
+            margin-top: 20px;
+        }
+
+        .box-two {
+            width: 200px;
+            height: 200px;
+            background-color: red;
+            box-sizing: border-box; /* 필수 <레이아웃 때문에> */
+            border: 10px solid black;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Hello CSS</h1>
+    <div class="box-one"><p style="color: white;"><a href="">상단으로 이동</a></p></div>
+    <div class="box-two"><a href="#">two two two</a></div>
+    <div class="box-three">three</div>
+    <div id="box-four">four</div>
+    <div id="box-five">five</div>
+
+     <!-- 
+        10 크롬 확장프로그램으로 컬러 피커 사용해보기 (OK)
+        09 구글 폰트 사용하기: 나눔고딕체 사용 (OK)
+        08 위치: 고정, 절대위치, 상대위치(기준) (OK)
+        07 정렬: 가로 가운데정렬 (OK)
+        06 테두리크기: 여백(안쪽 패딩, 바깥쪽 마진) (OK)
+        05 박스크기: 박스크기에 테두리크기,패딩크기 무시 (OK)
+        04 크기 단위: px, em(부모영역의 2배), rem(루트영역의 2배) (OK)
+        03 선택자 종류 사용 (OK)
+        02 CSS용어 설명: h${헬로 CSS}*6 (OK)
+            처음 하시는 분들이 헷갈려 하는 부분 : 계단형 영역 선택
+            경로(Path:상대경로, 절대경로)
+            Cascade Style Sheet 계층형 스타일 표 
+        01 css 적용하는 3가지 방법 확인, 내부css, 외부css, 인라인css (OK)
+     -->
+
+     <p><span style="color: tomato;">Lorem ipsum</span>  dolor, sit amet consectetur adipisicing elit. Nisi explicabo ipsum vel quia, delectus possimus iste quo. Maxime ad deleniti est sed saepe! Optio soluta eveniet molestiae sed quam deleniti pariatur architecto maxime fugit accusamus officiis natus inventore ad eligendi facere alias, amet debitis quis similique repellendus quia illo quidem. Iste obcaecati quisquam ducimus commodi quis omnis sequi repudiandae praesentium sed velit sint dolore, facilis, fuga ullam maiores sapiente dolorum minima molestiae accusantium impedit totam neque? Doloremque, obcaecati  iusto odio at suscipit ea explicabo veritatis tempore ad! Fugit deserunt recusandae porro obcaecati rem molestiae eius unde quis assumenda officiis.</p>
+
+     <p><span style="color: tomato;">Lorem ipsum</span>  dolor, sit amet consectetur adipisicing elit. Nisi explicabo ipsum vel quia, delectus possimus iste quo. Maxime ad deleniti est sed saepe! Optio soluta eveniet molestiae sed quam deleniti pariatur architecto maxime fugit accusamus officiis natus inventore ad eligendi facere alias, amet debitis quis similique repellendus quia illo quidem. Iste obcaecati quisquam ducimus commodi quis omnis sequi repudiandae praesentium sed velit sint dolore, facilis, fuga ullam maiores sapiente dolorum minima molestiae accusantium impedit totam neque? Doloremque, obcaecati  iusto odio at suscipit ea explicabo veritatis tempore ad! Fugit deserunt recusandae porro obcaecati rem molestiae eius unde quis assumenda officiis.</p>
+
+     <h1>Hello CSS</h1>
+     <h2>Hello CSS</h2>
+     <h3>Hello CSS</h3>
+     <h4>Hello CSS</h4>
+     <h5>Hello CSS</h5>
+     <h6>Hello CSS</h6>
+
+</body>
+</html>
