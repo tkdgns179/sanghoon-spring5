@@ -299,4 +299,74 @@ DROP USER XE2 CASCADE;
 - 오라클: 더미데이터 일괄등록예정 (회원관리 100명 게시판관리) (공지사항 50개 갤러리 50개)
 - 위 더미데이터는 프로시저(함수) 라는 DB프로그램 방식으로 추가합니다.
 
+#### 20210608(화) 작업
+> 페이징에 사용되는 변수(쿼리변수+VO변수)  
+<queryStartNo, queryPerPageNum, page, perPageNum, startPage, endPage>  
+검색에 사용되는 변수(쿼리변수만): 검색어(search_keyword), 검색조건(search_type)
+
+```
+-- SQL쿼리 페이징을 구현해서 변수로 삼을 것을 정의할 예정
+-- PageVO의 멤버변수로 사용예정
+
+SELECT TableB.* FROM
+(
+    SELECT ROWNUM AS RNUM, TableA.* FROM
+    (
+        SELECT * FROM tbl_member
+        ORDER BY reg_date DESC
+    ) TableA WHERE ROWNUM <= 1*10 + 10
+) TableB
+WHERE TableB.RNUM > 1*10
+;
+
+SELECT TableB.* FROM
+(
+    SELECT ROWNUM AS RNUM, TableA.* FROM
+    (
+        SELECT * FROM tbl_member
+        ORDER BY reg_date DESC
+    ) TableA WHERE ROWNUM <= (page*b) + b
+) TableB WHERE TableB.RNUM > (page*b)
+;
+-- (1 2 3 4) 1번페이지 열람시 1번 페이지에 1~10번의 게시물이 나오고 그다음 2번째 페이지는 11~20번의 게시물이 출력됨
+-- paging query에ㅐ서 필요한 변수는 2개
+-- ((a*b)/b+1)*b -> (0/10+1)*10
+-- 현재페이지수의 변수 page*b: 0*5, 1*5, 2*5...                    page*b == queryStartNo
+-- 현재페이지 기준 보여줄 게시물 개수의 변수 b: 5, 10, 20...          b == queryPerPageNum
+-- pageVO에서 필요한 추가변수 : page                                          
+-- UI하단의 페이지 선택번호 출력할 때 사용하는 변수(아래)                              
+-- perPageNum을 변수로 받아서 startPage, endPage 를 구해서 하단의 페이지 선택번호를 출력
+
+-- 검색기능
+SELECT TableB.* FROM
+(
+    SELECT ROWNUM AS RNUM, TableA.* FROM
+    (
+        SELECT * FROM tbl_member
+        WHERE user_id LIKE '%admin%'
+        OR user_name LIKE '%사용자8%'
+        ORDER BY reg_date DESC
+    ) TableA WHERE ROWNUM <= 0*5 + 5
+) TableB
+WHERE TableB.RNUM > 0*5
+;
+
+```
+>
+
+- 스프링코딩 작업순서 1부터6까지(아래)
+- 1. ERD를 기준으로 VO클래스를 생성.
+- M-V-C 사이에 데이터를 입출력하는 임시저장 공간(VO클래스-멤버변수+Get/Set메서드) 생성 
+- 보통 ValueObject클래스는 DB테이블과 1:1로 매칭이 됩니다.
+- 2. 매퍼쿼리(마이바티스사용)를 만듭니다.(VO사용해서쿼리생성).
+- 3. DAO(데이터엑세스오브젝트,DTO)클래스를 생성(SqlSession사용쿼리실행).*오늘 Sql세션은 root-context에 빈으로 만들었습니다.(1개)
+- IF 인터페이스는 만드는 목적 : 복잡한 구현 클래스를 간단하게 구조화 시켜서 개발자가 관리하기 편하게 정리하는 역할  
+cf) 기사시험책에서는 캡슐(알약)화 구현과 관련이 있음 -> 캡슐안에 어떤약이 있는지 모르게 먹게하기 //   
+*캡슐화 : 구현 내용을 몰라도, 이름만 보고 사용하게 하게 만든 것
+- 스프링 부트(간단한 프로젝트)에서는 4번 Service클래스가 없이 바로 컨트롤러로 이동합니다.
+- 4. Service(서비스)클래스생성(서비스에 쿼리결과를 담아 놓습니다.)(1개)
+- 게시물을 등록하는 서비스 1개(tbl_board - DAO 1st, tbl_attach - DAO 2nd...)
+- JUnit에서 위 작업한 내용을 CRUD 테스트
+- 5. Controller(컨트롤러)클래스생성(서비스결과를 JSP로 보냅니다.)
+- 6. JSP(View파일) 생성(컨트롤러의Model객체를 JSTL을 이용해 화면에 뿌려 줍니다.)
 

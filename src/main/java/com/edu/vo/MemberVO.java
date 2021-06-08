@@ -22,7 +22,7 @@ public class MemberVO {
 	private Date reg_date;
 	private Date upadate_date;
 	
-	// 롬복 loombok.jar를 사용하지 않음
+	// 롬복 lombok.jar를 사용하지 않음
 	// 우리는 Get/Set을 만들어서 사용합니다.
 	public String getUser_id() {
 		return user_id;
