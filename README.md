@@ -4,6 +4,8 @@
 - 2. -> 댓글처리(RestAPI-백엔드, Ajax처리-프론트엔드) -> 네이버아이디로그인(외부API사용) -> heroku 클라우드 배포
 - 3. 문서작업(화면 기획서.XLS 제작, 화면설계서.PPT 제작)
 
+- <난코스 첨부파일기능/스프링시큐리티/페이징기능>
+
 #### 20210525(화) 작업
 - 자바 기초 실습
 - 자바 .java클래스파일을 컴파일해서 생성된 .class파일을 실행하는 구조.
@@ -300,6 +302,8 @@ DROP USER XE2 CASCADE;
 - 위 더미데이터는 프로시저(함수) 라는 DB프로그램 방식으로 추가합니다.
 
 #### 20210608(화) 작업
+
+
 > 페이징에 사용되는 변수(쿼리변수+VO변수)  
 <queryStartNo, queryPerPageNum, page, perPageNum, startPage, endPage>  
 검색에 사용되는 변수(쿼리변수만): 검색어(search_keyword), 검색조건(search_type)
