@@ -13,8 +13,14 @@ public class PageVO {
 	private int queryPerPageNum; 	// 쿼리전용 변수
 	private Integer page;			// jsp에서발생 자바전용
 	private int perPageNum; 		// UI 하단에 보여줄 페이징 개수 계산에 필요
+	
+	private int totalCount;			// 계산식의 기초값으로써 이 전체개수가 구해진 이후 페이징등의 계산식이 진행됩니다
+	
 	private int startPage; 			// 위 perPageNum으로 구하는 UI하단 시작번호
 	private int endPage; 			// 위 perPageNum으로 구하는 UI하단 페이지 끝번호 
+	
+	private boolean  prev; 			// UI하단에 이전 페이지로 이동이 가능한지 참거짓으로 판별하는 변수
+	private boolean  next; 			// UI하단에 다음 페이지로 이동이 가능한지 참거짓으로 판별하는 변수
 	
 	private String search_keyword; 	// jsp에서 받은 검색어 쿼리전용 변수
 	private String search_type; 	// 검색조건 해당하는 쿼리전용 변수
