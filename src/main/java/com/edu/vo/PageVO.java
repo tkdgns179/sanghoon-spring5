@@ -11,7 +11,7 @@ package com.edu.vo;
 public class PageVO {
 	private int queryStartNo; 		// 쿼리전용 변수
 	private int queryPerPageNum; 	// 쿼리전용 변수
-	private Integer page;			// jsp에서발생 자바전용
+	private Integer page;			// jsp에서발생 자바전용 int인데 Null값을 허용
 	private int perPageNum; 		// UI 하단에 보여줄 페이징 개수 계산에 필요
 	
 	private int totalCount;			// 계산식의 기초값으로써 이 전체개수가 구해진 이후 페이징등의 계산식이 진행됩니다
@@ -24,4 +24,73 @@ public class PageVO {
 	
 	private String search_keyword; 	// jsp에서 받은 검색어 쿼리전용 변수
 	private String search_type; 	// 검색조건 해당하는 쿼리전용 변수
+	
+	public int getQueryStartNo() {
+		return queryStartNo;
+	}
+	public void setQueryStartNo(int queryStartNo) {
+		this.queryStartNo = queryStartNo;
+	}
+	public int getQueryPerPageNum() {
+		return queryPerPageNum;
+	}
+	public void setQueryPerPageNum(int queryPerPageNum) {
+		this.queryPerPageNum = queryPerPageNum;
+	}
+	public Integer getPage() {
+		return page;
+	}
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+	public int getPerPageNum() {
+		return perPageNum;
+	}
+	public void setPerPageNum(int perPageNum) {
+		this.perPageNum = perPageNum;
+	}
+	public int getTotalCount() {
+		return totalCount;
+	}
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
+	}
+	public int getStartPage() {
+		return startPage;
+	}
+	public void setStartPage(int startPage) {
+		this.startPage = startPage;
+	}
+	public int getEndPage() {
+		return endPage;
+	}
+	public void setEndPage(int endPage) {
+		this.endPage = endPage;
+	}
+	public boolean isPrev() {
+		return prev;
+	}
+	public void setPrev(boolean prev) {
+		this.prev = prev;
+	}
+	public boolean isNext() {
+		return next;
+	}
+	public void setNext(boolean next) {
+		this.next = next;
+	}
+	public String getSearch_keyword() {
+		return search_keyword;
+	}
+	public void setSearch_keyword(String search_keyword) {
+		this.search_keyword = search_keyword;
+	}
+	public String getSearch_type() {
+		return search_type;
+	}
+	public void setSearch_type(String search_type) {
+		this.search_type = search_type;
+	}
+	
+	
 }
