@@ -20,6 +20,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.edu.service.IF_MemberService;
 import com.edu.vo.MemberVO;
+import com.edu.vo.PageVO;
 
 /**
  * 이 클래스는 오라클과 연동해서 CRUD를 테스트하는 클래스 입니다.
@@ -52,6 +53,25 @@ public class DataSourceTest {
 	@Inject // MemberService 서비스를 주입받아서 객체를 사용합니다
 	private IF_MemberService memberService;
 	
+	@Test
+	public void deleteMember() throws Exception {
+		memberService.deleteMember("user_del");
+		selectMember();
+	}
+	
+	@Test
+	public void insertMember() throws Exception {
+		MemberVO memberVO = new MemberVO();
+		memberVO.setUser_id("user_del");
+		memberVO.setUser_pw("1234"); // 스프링 시큐리티 중 512비트 암호화로 처리예정
+		memberVO.setUser_name("삭제할 사용자");
+		memberVO.setEmail("user@test.com");
+		memberVO.setPoint(10);
+		memberVO.setEnabled(true);
+		memberVO.setLevels("ROLE_USER");
+		memberService.insertMember(memberVO);
+		selectMember();
+	}
 	
 	@Test
 	public void selectMember() throws Exception {
@@ -61,7 +81,21 @@ public class DataSourceTest {
 		// 변수를 2~3개 이상은 바로 String 변수로 처리하지않고, VO 만들어서 사용
 		// PageVO.java 클래스를 만들어서 페이징처리변수와 검색어변수 선언, Get/Set 생성
 		// PageVO 만들기전 SQL쿼리로 실제 구현해 보면서, 필요한 변수 만들어야합니다.
-		List<MemberVO> listMember = memberService.selectMember();
+		// pageVO 객체를 만들어서 가상으로 초기값을 입력합니다
+		PageVO pageVO = new PageVO();
+		int totalCount = memberService.countMember();
+		logger.info(totalCount+"------------------------------------");
+		pageVO.setPage(1);
+		pageVO.setPerPageNum(10);
+		pageVO.setQueryPerPageNum(10);
+		pageVO.setTotalCount(memberService.countMember());
+		
+		pageVO.setSearch_type("user_id"); // 검색타입 all, user_id, user_name
+		pageVO.setSearch_keyword("user_del");
+		
+		logger.info("pageVO 저장된 값 확인 "+pageVO.toString());
+		// 위 setTotalCount()에서 calPage()함수를 실행시키는데 calcPage()에서 3가지 변수가 설정되어야함 *NullPointError
+		List<MemberVO> listMember = memberService.selectMember(pageVO);
 		listMember.toString();
 				
 	}
@@ -71,7 +105,7 @@ public class DataSourceTest {
 	public void oldQueryTest() throws Exception { 
 		// 스프링빈을 사용하지 않을 때 예전 방식: 코딩테스트에서는 스프링 설정을 안쓰고, 직접 DB 아이디/암호 입력
 		Connection connection = null;
-		connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XE","XE2","apmsetup");
+		connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XE","XE","apmsetup");
 		logger.debug("데이터베이스 접속이 성공하였습니다 DB종류는 "+connection.getMetaData().getDatabaseProductName());
 		// 직접쿼리를 날릴빈다. 날리기전 쿼리문장 객체생성 statement // java.sql Statement 임포트
 		Statement stmt = connection.createStatement();

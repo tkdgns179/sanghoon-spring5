@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 import com.edu.vo.MemberVO;
+import com.edu.vo.PageVO;
 
 
 
@@ -23,10 +24,29 @@ public class MemberDAOImpl implements IF_MemberDAO {
 	private SqlSession sqlSession;
 	
 	@Override // 부모 인터페이스의 메소드를 상속해서 재정의합니다.
-	public List<MemberVO> selectMember() throws Exception {
+	public List<MemberVO> selectMember(PageVO pageVO) throws Exception {
 		//  SqlSession의 메소드를 이용해서 매퍼 쿼리를 사용합니다.
-		List<MemberVO> listMember = sqlSession.selectList("memberMapper.selectMember");
+		List<MemberVO> listMember = sqlSession.selectList("memberMapper.selectMember", pageVO);
 		return listMember;
+	}
+
+	@Override
+	public int countMember() throws Exception {
+		// SqlSession bean의 메소드를 이용해서 mapper query를 실행 (아래)
+		int totalCount = sqlSession.selectOne("memberMapper.countMember");
+		return totalCount;
+	}
+
+	@Override
+	public void insertMember(MemberVO memberVO) throws Exception {
+		// SqlSession bean의 메소드를 이용해서 mapper query를 실행 (아래)
+		sqlSession.insert("memberMapper.insertMember", memberVO);
+	}
+
+	@Override
+	public void deleteMember(String user_id) throws Exception {
+		// SqlSession bean의 메소드를 이용해서 mapper query를 실행 (아래)
+		sqlSession.delete("memberMapper.deleteMember", user_id);
 	}
 
 }
