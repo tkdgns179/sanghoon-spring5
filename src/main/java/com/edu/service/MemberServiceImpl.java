@@ -30,9 +30,9 @@ public class MemberServiceImpl implements IF_MemberService{
 	}
 
 	@Override
-	public int countMember() throws Exception {
+	public int countMember(PageVO pageVO) throws Exception {
 		
-		return memberDAO.countMember();
+		return memberDAO.countMember(pageVO);
 	}
 
 	@Override
@@ -43,6 +43,16 @@ public class MemberServiceImpl implements IF_MemberService{
 	@Override
 	public void deleteMember(String user_id) throws Exception {
 		memberDAO.deleteMember(user_id);
+	}
+
+	@Override
+	public MemberVO readMember(String user_id) throws Exception {
+		return memberDAO.readMember(user_id);
+	}
+
+	@Override
+	public void updateMember(MemberVO memberOne) throws Exception {
+		memberDAO.updateMember(memberOne);
 	}
 	
 	

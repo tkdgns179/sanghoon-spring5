@@ -29,7 +29,7 @@ public class PageVO {
 	private boolean  next; 			// UI하단에 다음 페이지로 이동이 가능한지 참거짓으로 판별하는 변수
 	
 	private String search_keyword; 	// jsp에서 받은 검색어 쿼리전용 변수
-	private String search_type; 	// 검색조건 해당하는 쿼리전용 변수
+	private String search_type; 	// jsp에서 받은 검색조건 해당하는 쿼리전용 변수
 	
 	public int getQueryStartNo() {
 		// this.page-1하는 이유 jsp에서는 get으로 받을때 1부터 받지만 

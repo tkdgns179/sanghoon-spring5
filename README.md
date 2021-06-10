@@ -3,6 +3,8 @@
 - 1. Junit -> Mybatis(DB핸들링) -> 페이징기능 -> 검색기능  -> 첨부파일기능 -> Spring security(로그인 인증) -> 댓글처리(RestAPI)
 - 2. -> 댓글처리(RestAPI-백엔드, Ajax처리-프론트엔드) -> 네이버아이디로그인(외부API사용) -> heroku 클라우드 배포
 - 3. 문서작업(화면 기획서.XLS 제작, 화면설계서.PPT 제작)
+- heroku 클라우드에 배포할 때, 매퍼폴더의 mysql폴더내의 쿼리에 now()를 date_add(now(3), interval 9 HOUR)로 변경할 예정
+  (이유는 DB서버 타임존이 GMT기준이기 때문에)
 
 - <난코스 첨부파일기능/스프링시큐리티/페이징기능>
 
@@ -382,3 +384,30 @@ cf) 기사시험책에서는 캡슐(알약)화 구현과 관련이 있음 -> 캡
 - 쿼리에서 변수와 문자열과 연결할 때는 +기호는 사용불가 콤마불가 --> || 쌍파이프라인기호로 연결시켜줌
 - JUnit에서 회원관리 나머지 CRUD 테스트 진행
 - jsp에 Controller를 이용해서  관리자단 회원관리화면 JSP 만들기 진행예정.
+
+#### 20210610(목) 작업예정.
+- 수업전 내용 확인 합니다.(아래)
+- 쿼리실습에서 .equals함수 사용에 대해서 설명할때,아래 isEmpty메서드와 착각해서 이야기 한 내용이 있어서 정정 합니다.
+- 자바에서 객체가 공백 또는 비었는지 비교할때, 예를 들면, 우리프로젝트에서 첨부파일이 있는지 비교할때 아래 처럼 사용하지 않고
+- if(save_file_name != null && "".equals(save_file_name))
+- 다음처럼 짧게(널과공백체크를 한번에) 사용합니다.(아래)
+- if(!save_file_name.isEmpty())
+- =========================================
+- GMT시간(그리니치 천문대 기준 - 표준시) - KST한국 시간과는 9시간 차이
+- DB서버에 타임존 설정 Asia/Seoul로 되어 있으면, 그냥 사용합니다
+- 위 처럼 타임존 설정이 없으면 GMT시간에 시차를 더해서 INSERT UPDATE 한국시간으로 사용합니다.
+- 오라클일때 확인 :
+	SELECT TO_CHAR(systimestamp + numtodsinterval( 9, 'HOUR' ), 'YYYY-MM-DD HH24:MI.SS.FF4')  from dual;
+- Mysql(마리아dB)확인 :
+	SELECT DATE_ADD(NOW(3), INTERVAL 9 HOUR);
+- JUnit에서 회원관리 나머지 Read,Update 테스트 진행예정.
+- 업데이트 실습은 회원암호를 스프링시큐리티5 암호화(1234 -> hash data)로 일괄변경 실습예정.
+- 정방향 암호화 가능, 역방향 복호화는 불가능(JAVA용 스프링 시큐리티 암호화, DB용 MD5 암호화, ...)
+
+```
+BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+String userPwEncoder = passwordEncoder.encode(memberVO.getUser_pw());
+memberVO.setUser_pw(userPwEncoder);
+```
+- 컨트롤러를 이용해서 관리자단 회원관리화면 JSP 만들기 진행예정.
+- JUnit 마치고, 관리자단 회원관리(CRUD) jsp까지는 작업합니다. 이후 앞에 내용을 참조해서 계속 확장해 나가는 작업이 이어집니다.
