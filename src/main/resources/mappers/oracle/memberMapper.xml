@@ -83,8 +83,9 @@ systimestamp
 
 <select id="countMember" resultType="int">
 <!--
-현재 처럼 조건없이 개수를 구하면, 검색결과에 대한 페이징 값을 구할 수 없음 
-그래서 검색이 포함된 카운트 개수가 나와야함
+	현재 처럼 조건없이 개수를 구하면, 검색결과에 대한 페이징 값을 구할 수 없음 
+	그래서 검색이 포함된 카운트 개수가 나와야함
+	아래쿼리는 검색한 전체개수를 구현한 쿼리 -> 결과값을 PageVO클래스의 calcPage()메소드에 사용
 -->
 select count(*) from  tbl_member
 <include refid="sqlWhere" /> 
