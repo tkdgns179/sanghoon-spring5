@@ -114,7 +114,7 @@
         <!-- 페이징처리 START -->
         <div class="row">
             <div class="col-12 text-right">
-            <a href="board_write.html" class="btn btn-primary mb-3">글쓰기</a>
+            <a href="/admin/member/member_insert_form.html?page=${pageVO.page}&search_keyword=${pageVO.search_keyword}&seacrh_type${pageVO.search_type}" class="btn btn-primary mb-3">회원등록</a>
             <ul class="pagination justify-content-center">
             
               
