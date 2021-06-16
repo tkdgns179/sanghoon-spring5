@@ -14,15 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.edu.service.IF_BoardTypeService;
 import com.edu.service.IF_MemberService;
+import com.edu.vo.BoardTypeVO;
 import com.edu.vo.MemberVO;
 import com.edu.vo.PageVO;
 
 /**
  * 이 클래스는 Admin관리자단을 접근하는 클래스
+ * 디스패처 서블렛 클래스는 톰캣(web.xml)이 실행될 때 제일 먼저 실행되는 클래스, 그래서, 게이트웨이라고 합니다.
+ * 디스페처 서블릿 실행될 때 , 컨트롤러의 Request 매핑경로르 다 등록합니다.
  * 변수 Object를 만들어서 jsp로 전송 <-> jsp 폼값을 받아서 Object로 처리
  * @author 김일국
- *
  */
 @Controller
 public class AdminController {
@@ -32,8 +35,56 @@ public class AdminController {
 	// 이 메소드는 회원목록을 출력하는 jsp와 매핑이 됩니다.
 	@Inject
 	private IF_MemberService memberService;
+	@Inject
+	private IF_BoardTypeService boardTypeService;
 	
-	// 아래경로는 회원신규등록 폼을 호출하는 URL
+	// jsp에서 게시판생성관리에 GET/POST 접근할 때 URL을 bbs_type으로 지정 // +a bbs는 bulletin' board system의 약자
+	// 왜 board_type으로 하지않고, bbs_type으로 하는 이유는 왼쪽메뉴 고정시키는 로직에서 경로 board와 겹치지 않기위해서
+	@RequestMapping(value="/admin/bbs_type/bbs_type_list", method = RequestMethod.GET)
+	public String selectBoardTypeList(Model model) throws Exception { // 목록폼
+		model.addAttribute("listBoardTypeVO", boardTypeService.selectBoardType());
+		return "admin/bbs_type/bbs_type_list"; // 상대경로일 때는, views 폴더가 최상위루트입니다
+	}
+	
+	//-------------------------------------------------- url이 같아도 전송방식이 다르면 다르게 매핑됨 ---------------
+	// bbs_type_list.jsp의 게시판 생성버튼을 클릭했을 때 이동하는 폼 경로
+	@RequestMapping(value="/admin/bbs_type/bbs_type_insert", method = RequestMethod.GET)
+	public String insertBoardTypeForm() throws Exception { // 입력폼
+		return "admin/bbs_type/bbs_type_insert";
+	}
+	
+	// bbs_type_list.jsp 입력폼에서 전송된 값을 BoardTypeVO에 (단)담아서 {구현} 
+	// 단 자동으로 바인딩 되려면, 폼의 name이 속성 value가 VO멤버변수명과 동일해야함 // 전에는 @RequestParam으로 받아주었음
+	@RequestMapping(value="/admin/bbs_type/bbs_type_insert", method = RequestMethod.POST)
+	public String insertBoardType(BoardTypeVO boardTypeVO) throws Exception { // 
+		boardTypeService.insertBoardType(boardTypeVO);
+		return "redirect:/admin/bbs_type/bbs_type_list"; // redirect:는 절대경로를 사용합니다 forward:도 사용가능 (뒤로가기가 됨)
+	}
+	//--------------------------------------------------------------------------------------------------
+	
+	// 게시판 생성관리는 이 기능은 사용자단에서 UI를 사용할 일이 업식 떄문에, Read, Update를 1개로 사용합니다.
+	// bbs_type_list.jsp의 목록에서 1개의 라인을 클릭했을 때 , 이동하는 폼 경로
+	@RequestMapping(value="/admin/bbs_type/bbs_type_update", method = RequestMethod.GET)
+	public String updateBoardTypeForm(@RequestParam("board_type")String board_type, Model model) throws Exception {
+		model.addAttribute("boardTypeVO", boardTypeService.readBoardType(board_type));
+		return "admin/bbs_type/bbs_type_update";
+	}
+	
+	@RequestMapping(value="/admin/bbs_type/bbs_type_update", method = RequestMethod.POST)
+	public String updateBoardType(BoardTypeVO boardTypeVO) throws Exception {
+		boardTypeService.updateBoardType(boardTypeVO);
+		return "redirect:/admin/bbs_type/bbs_type_update?board_type="+boardTypeVO.getBoard_type();
+	}
+	
+	@RequestMapping(value="/admin/bbs_type/bbs_type_delete", method = RequestMethod.POST)
+	public String deleteBoardType(@RequestParam("board_type")String board_type) throws Exception {
+		boardTypeService.deleteBoardType(board_type);
+		return "redirect:/admin/bbs_type/bbs_type_list";
+	}
+	
+	//============================================================================================
+	
+	// 아래경로는 회원신규등록 폼을 호출하는 URL쿼리스트링으로 보낸 것을 받을 때는 GET방식으로 받습니다.
 	@RequestMapping(value="/admin/member/member_insert_form", method = RequestMethod.GET)
 	public String insertMemberForm(@ModelAttribute("pageVO") PageVO pageVO) throws Exception {
 		

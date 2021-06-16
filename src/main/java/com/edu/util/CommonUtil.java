@@ -41,6 +41,6 @@ public class CommonUtil {
 				memberCnt = "0";
 			}
 		}
-		return memberCnt; // 0.jsp로 가는게 아니라 이유는 @ResponseBody 때문이고, RestAPI는 값만 반환
+		return memberCnt; // 0.jsp로 가지않음 이유는 @ResponseBody 때문이고, RestAPI는 값만을 반환함
 	}
 }

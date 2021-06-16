@@ -106,7 +106,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/admin/bbs_type/bbs_type_list" class="nav-link">
               <i class="far fa-circle nav-icon"></i>
               <p>게시판생성관리</p>
             </a>
@@ -129,7 +129,7 @@
               <li class="nav-item">
                 <a href="board_list.html" class="nav-link">
                   <i class="far fa-dot-circle nav-icon"></i>
-                  <p>겔러리</p>
+                  <p>갤러리</p>
                 </a>
               </li>
             </ul>

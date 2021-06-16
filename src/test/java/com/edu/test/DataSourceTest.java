@@ -19,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.edu.service.IF_BoardTypeService;
 import com.edu.service.IF_MemberService;
 import com.edu.vo.MemberVO;
 import com.edu.vo.PageVO;
@@ -53,6 +54,8 @@ public class DataSourceTest {
 	
 	@Inject // MemberService 서비스를 주입받아서 객체를 사용합니다
 	private IF_MemberService memberService;
+	@Inject 
+	private IF_BoardTypeService boardTypeService;
 	
 	@Test
 	public void updateMember() throws Exception {

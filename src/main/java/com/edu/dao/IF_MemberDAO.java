@@ -12,7 +12,7 @@ import com.edu.vo.PageVO;
  *
  */
 public interface IF_MemberDAO {
-	// List<제네릭타입> : MemberVO 1개의 레코드를 여러 개 출력을 위해 List<클래스형> 감싸주면q
+	// List<제네릭타입> : MemberVO 1개의 레코드를 여러 개 출력을 위해 List<클래스형> 감싸주면
 	// 다수의 레코드를 저장할 수 있는 형태가 됩니다.
 	public List<MemberVO> selectMember(PageVO pageVO) throws Exception;
 	// 이 곳에 CRUD 메소드가 계속 추가됩니다.
