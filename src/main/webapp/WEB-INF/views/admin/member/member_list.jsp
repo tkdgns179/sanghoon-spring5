@@ -100,7 +100,7 @@
                     <td><c:out value="${memberVO.user_id}" /></td>
                     <td><c:out value="${memberVO.user_name}" /></td>
                     <td><c:out value="${memberVO.email}" /></td>
-                    <td><span class="tag tag-success">${memberVO.levels}</span></td>
+                    <td><span class="badge badge-danger">${memberVO.levels}</span></td>
                     <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss.SSSS" value="${memberVO.reg_date}"/></td>
                	</tr>                  
                 </c:forEach>

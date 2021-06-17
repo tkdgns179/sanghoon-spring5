@@ -42,7 +42,7 @@ public class AdminController {
 	// 왜 board_type으로 하지않고, bbs_type으로 하는 이유는 왼쪽메뉴 고정시키는 로직에서 경로 board와 겹치지 않기위해서
 	@RequestMapping(value="/admin/bbs_type/bbs_type_list", method = RequestMethod.GET)
 	public String selectBoardTypeList(Model model) throws Exception { // 목록폼
-		model.addAttribute("listBoardTypeVO", boardTypeService.selectBoardType());
+		// model.addAttribute("listBoardTypeVO", boardTypeService.selectBoardType());
 		return "admin/bbs_type/bbs_type_list"; // 상대경로일 때는, views 폴더가 최상위루트입니다
 	}
 	

@@ -68,7 +68,7 @@
               <tbody>
                 <!-- 아래 링크주소에 jsp에서 프로그램처리 예정 -->
                <c:forEach var="boardTypeVO" items="${listBoardTypeVO}">
-                <tr onclick="location.replace('/admin/bbs_type/bbs_type_update?board_type=notice');" style="cursor:pointer">
+                <tr onclick="location.replace('/admin/bbs_type/bbs_type_update?board_type=${boardTypeVO.board_type}');" style="cursor:pointer">
                     <td>${boardTypeVO.board_type}</td>
                     <td>${boardTypeVO.board_name}</td>
                     <td>${boardTypeVO.board_sun}</td>
@@ -83,7 +83,7 @@
         <!-- 페이징처리 START -->
         <div class="row">
            <div class="col-12 text-right">
-            <a href="/admin/bbs_type/bbs_type_insert" class="btn btn-primary mb-3">게시판등록</a>
+            <a href="/admin/bbs_type/bbs_type_insert" class="btn btn-primary mb-3">게시판생성</a>
 	    
           </div>
 

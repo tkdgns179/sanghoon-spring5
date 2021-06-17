@@ -468,9 +468,25 @@ memberVO.setUser_pw(userPwEncoder);
 - 관리자단 게시물관리 CRUD 처리(4.파일업로드구현,5.트랜잭션구현).
 - 게시판 생성관리VO파일, Mapper파일, DAO파일(+ 인터페이스), Service파일(+ 인터페이스) 작성
 
-#### 20210617(목) 작업예정
+#### 20210617(목) 작업
+- [복습] 스프링의 주요기능 : IoC(제어의 역전 : 객체의 관리를 스프링이 대신해줌) DI(의존성 주입 @Inject) 
+- 관리자단 왼쪽메뉴에 게시판 종류가 실시간으로 출력이 되어야 하는데, 지금은 게시판 생성관리 목록 페이지에서만 보임 (문제점)
+- 위 문제를 해결하는 방식으로 AOP기능을 사용합니다.
+- Spring AOP구현은 3가지 방식이 있습니다 
+- @Aspect, @ControllerAdvice, intercept tag를 사용해서 AOP구현
+- AOP용어 : 관점지향 = 프로그램 전체의 영향을 주는 공통의 기능을 적용하는 패턴 기법
+- AOP용어 : Advice(충고 - 간섭) : 프로세스작업 중간에 필요한 기능을 중간에 끼워넣는 것을 어드바이스라고 함
+- Advice : Point Cut(간섭, 필요한 기능을 끼워넣는 시점, @Before(발생하기전에) @After(발생한후에) @Around(발생전후))
+- @ControllerAdvice 실행조건 : 컨트롤러 클래스의 메소드에만 Advice(간섭) 적용됨
+- @Aspect 장점 : 특정클래스의 특정메소드 실행시(point cut) 자동 실행되는 메소드를 지정이 가능
+- @Aspect 실행조건 : @Controller 이외의  @Repository(DAO클래스) @Service(서비스클래스)에도 Advice가능
+- 게시판종류 출력 : @ControllerAdvice (게시판 생성관리 CRUD 작업시 실습)
+- 검색시 pageVO를 유지하듯이 board_type 값을 계속 유지하는 기능 @Aspect (게시물관리 CRUD 작업시 실습 적용할 예정)
+- 보안 - 로그인 체크, 권한 체크시 : intercept(스프링시큐리티)태그를 사용  (로그인 기능, 권한체크기능 구현시 실습)
+- intercept 태그는 스프링시큐리티에서 관리
 - 관리자단 게시판 생성관리 리스트 페이지 OK
 - 관리자단 게시판 생성관리 CRUD 마무리 처리 (3. 스프링의 AOP기능구현)
 - UI디자인 과제물 제출 4교시
-
+- 게시물관리 시작 : 다중게시판 = 1개의 페이지로 공지사항, 갤러리, Q&A...
+- 정방향으로 개발시작 VO제작 -> mapper query 제작
 
