@@ -54,8 +54,6 @@ public class DataSourceTest {
 	
 	@Inject // MemberService 서비스를 주입받아서 객체를 사용합니다
 	private IF_MemberService memberService;
-	@Inject 
-	private IF_BoardTypeService boardTypeService;
 	
 	@Test
 	public void updateMember() throws Exception {

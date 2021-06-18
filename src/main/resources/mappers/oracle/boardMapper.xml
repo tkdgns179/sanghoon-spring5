@@ -1,6 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="boardMapper">
+<!-- 첨부파일 CRUD 쿼리생성, 주, 우리로직에서는 첨부파일은 수정X -> 입력,삭제 -->
+
+<!-- 첨부파일 삭제는 1개만 삭제하지 않고, 일괄삭제도 있음 -->
+<delete id="deleteAttachAll">
+DELETE FROM tbl_attach WHERE bno = #{bno}
+</delete>
+
+<delete id="deleteAttach">
+DELETE FROM tbl_attach WHERE save_file_name = #{save_file_name}
+</delete>
+
+<select id="readAttach" resultType="com.edu.vo.AttachVO">
+SELECT * FROM tbl_attach WHERE bno = #{bno}
+</select>
+
+<!--
+왜 수정이 없는가 -> 저장된 파일을 수정못하고, 기존삭제하고, 신규파일을 덮어씁니다.
+게시물 등록시 발생된 bno를 구한 결과값 1개 첨부파일의 bno 입력값으로 사용  
+-->
+<insert id="updateAttach">
+INSERT INTO tbl_attach (save_file_name, real_file_name, reg_date, bno)
+VALUES(#{save_file_name}, #{real_file_name}, sysdate, #{bno})
+</insert>
+
+<!-- 게시물 등록시 발생된 bno를 구한 결과값 1개만 구해서 첨부파일의 bno입력값으로 사용 - 서브쿼리사용 -->
+<insert id="insertAttach">
+INSERT INTO tbl_attach
+(save_file_name, real_file_name, reg_date, bno)
+VALUES
+(#{save_file_name}, #{real_file_name}, sysdate,
+	SELECT bno FROM 
+	(
+	SELECT bno FROM tbl_board ORDER BY bno DESC
+	) WHERE ROWNUM = 1;
+ )
+</insert>
+<!-- 위 bno는 게시물 등록시첨부파일 쿼리는 bno 매개변수로 보낼 수가 없가 없는 상태임-->
+
+<delete id="deleteBoard">
+DELETE FROM tbl_board WHERE bno = #{bno}
+</delete>
+
+<update id="updateBoard">
+UPDATE tbl_board SET
+board_type = #{board_type},
+title = #{title},
+content = #{content},
+writer = #{writer},
+update_date = systimestamp
+WHERE bno = #{bno]
+</update>
+
+<update id="updateViewCount">
+UPDATE tbl_board SET	
+view_count = NVL(view_count, 0) + 1
+WHERE bno = #{bno}
+</update>
+
+<select id="readBoard">
+SELECT * FROM tbl_board WHERE bno = #{bno}
+</select>
 <!-- bno 필드변수가 자동증가가 되는 기능이 필요 seq.nextVal-->
 <!-- keyProperty : 변수명 // order : INSERT보다 selectkey를 먼저 실행 -->
 <insert id="insertBoard">
@@ -15,6 +76,12 @@
 	#{seq_bno}, #{title}, #{content}, #{writer}, systimestamp, #{board_type}
 	)	
 </insert>
+
+<!-- 페이징을 제외한 검색쿼리(board_type포함)를 이용해서 게시물 개수 totalCount변수값 구하기 -->
+<select id="countBoard" resultType="int">
+SELECT COUNT(*) FROM tbl_board
+<include refid="sqlWhere" />
+</select>
 <!-- 중첩쿼리로 페이징처리를 합니다 -->
 <select id="selectBoard" resultType="com.edu.vo.BoardVO">
 SELECT table_b.* FROM 
@@ -24,16 +91,17 @@ SELECT table_b.* FROM
 		SELECT * FROM tbl_board
 		<include refid="sqlWhere"></include>
 <![CDATA[
-	) table.a WHERE ROWNUM <= (#{queryStartNo}*#{queryPerPageNum})+#{queryPerPageNum}	
+	) table_a WHERE ROWNUM <= (#{queryStartNo}*#{queryPerPageNum})+#{queryPerPageNum}	
 ) table_b WHERE table_b.rnum > #{queryStartNo}*#{queryPerPageNum} 
 ]]>		
 
 </select>
 
-<!-- 검색처리는 멤버쿼리에서 작성한 내용 붙여넣기 // *다중게시판용 필드조회조건 추가예정 -->
+<!-- 검색처리는 멤버쿼리에서 작성한 내용 붙여넣기 // *다중게시판용 필드조회조건 추가 PageVO -->
 <sql id="sqlWhere">
+WHERE board_type = #{board_type}
 <if test="search_type != '' and search_type != null">
-	WHERE
+		AND (
 		<if test="search_type == 'all'.toString()">
 			title LIKE '%'||#{search_keyword}||'%'
 			OR content LIKE '%'||#{search_keyword}||'%'
@@ -44,6 +112,7 @@ SELECT table_b.* FROM
 		<if test="search_type == 'content'.toString()">
 			content LIKE '%'||#{search_keyword}||'%'
 		</if>
+		)
 </if>
 </sql>
 </mapper>

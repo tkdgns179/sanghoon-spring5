@@ -28,6 +28,7 @@ public class PageVO {
 	private boolean  prev; 			// UI하단에 이전 페이지로 이동이 가능한지 참거짓으로 판별하는 변수
 	private boolean  next; 			// UI하단에 다음 페이지로 이동이 가능한지 참거짓으로 판별하는 변수
 	
+	private String board_type;		// 게시판 종류를 나타내는 전용 변수추가 			
 	private String search_keyword; 	// jsp에서 받은 검색어 쿼리전용 변수
 	private String search_type; 	// jsp에서 받은 검색조건 해당하는 쿼리전용 변수
 	
@@ -47,6 +48,8 @@ public class PageVO {
 	public void setQueryPerPageNum(int queryPerPageNum) {
 		this.queryPerPageNum = queryPerPageNum;
 	}
+	
+//	------------------------------------------------------------------------------------------------------
 	
 	public Integer getPage() {
 		return page;
@@ -107,6 +110,8 @@ public class PageVO {
 		this.endPage = endPage;
 	}
 	
+//	------------------------------------------------------------------------------------------------------
+	
 	public boolean isPrev() {
 		return prev;
 	}
@@ -121,6 +126,7 @@ public class PageVO {
 		this.next = next;
 	}
 	
+//	------------------------------------------------------------------------------------------------------
 	public String getSearch_keyword() {
 		return search_keyword;
 	}
@@ -131,9 +137,20 @@ public class PageVO {
 	public String getSearch_type() {
 		return search_type;
 	}
+	
 	public void setSearch_type(String search_type) {
 		this.search_type = search_type;
 	}
+	
+	public String getBoard_type() {
+		return board_type;
+	}
+	
+	public void setBoard_type(String board_type) {
+		this.board_type = board_type;
+	}
+	
+	
 	
 	
 }

@@ -15,7 +15,7 @@ import com.edu.vo.BoardTypeVO;
  *
  */
 @Repository
-public class BoardTypeDAOimpl implements IF_BoardTypeDAO {
+public class BoardTypeDAOImpl implements IF_BoardTypeDAO {
 	// sqlSession Template을 DI해줍니다.
 	@Inject // JAVA 1.8부터 나온 신규 어노테이션입니다.
 	private SqlSession sqlSession;
