@@ -30,13 +30,17 @@ VALUES(#{save_file_name}, #{real_file_name}, sysdate, #{bno})
 INSERT INTO tbl_attach
 (save_file_name, real_file_name, reg_date, bno)
 VALUES
-(#{save_file_name}, #{real_file_name}, sysdate,
-	SELECT bno FROM 
-	(
-	SELECT bno FROM tbl_board ORDER BY bno DESC
-	) WHERE ROWNUM = 1;
- )
+(
+#{save_file_name}, #{real_file_name}, sysdate, #{bno}	
+)
 </insert>
+<!--
+bno 변수값으로 받는 로직을 추가했기 때문에 아래 주석 
+SELECT bno FROM 
+(
+	SELECT bno FROM tbl_board ORDER BY bno DESC
+) WHERE ROWNUM = 1;
+ -->
 <!-- 위 bno는 게시물 등록시첨부파일 쿼리는 bno 매개변수로 보낼 수가 없가 없는 상태임-->
 
 <delete id="deleteBoard">
@@ -64,8 +68,8 @@ SELECT * FROM tbl_board WHERE bno = #{bno}
 </select>
 <!-- bno 필드변수가 자동증가가 되는 기능이 필요 seq.nextVal-->
 <!-- keyProperty : 변수명 // order : INSERT보다 selectkey를 먼저 실행 -->
-<insert id="insertBoard">
-	<selectKey keyProperty="seq_bno" resultType="int" order="BEFORE">
+<insert id="insertBoard" parameterType="com.edu.vo.BoardVO">
+	<selectKey keyProperty="bno" resultType="int" order="BEFORE">
 	SELECT seq_bno.nextval FROM dual
 	</selectKey>
 	INSERT INTO tbl_board 
@@ -73,7 +77,7 @@ SELECT * FROM tbl_board WHERE bno = #{bno}
 	bno, title, content, writer, reg_date, board_type 
 	)
 	VALUES (
-	#{seq_bno}, #{title}, #{content}, #{writer}, systimestamp, #{board_type}
+	#{bno}, #{title}, #{content}, #{writer}, systimestamp, #{board_type}
 	)	
 </insert>
 

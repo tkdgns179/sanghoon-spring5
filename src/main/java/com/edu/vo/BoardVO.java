@@ -18,7 +18,11 @@ public class BoardVO {
 	private Integer reply_count;
 	private Date reg_date; 
 	private Date update_date;
-	private String board_type;
+	private String board_type; // FK
+	// 게시물을 등록 1개당 첨부파일은 0개, 1개 혹은  2개 이상 요구될 수 있습니다 그래서, DB에는 없는 필드를 만듭니다. ------------
+	// 그래서, DB에는 없는 가상 멤버변수(필드)를 2개 만듭니다
+	private String[] save_file_names; 
+	private String[] real_file_names; 
 	
 	// 디버그용
 	@Override
@@ -97,6 +101,22 @@ public class BoardVO {
 	
 	public void setBoard_type(String board_type) {
 		this.board_type = board_type;
+	}
+// ----------------------------------가상의 필드 GET/SET 메소드---------------------------------------
+	public String[] getSave_file_names() {
+		return save_file_names;
+	}
+
+	public void setSave_file_names(String[] save_file_names) {
+		this.save_file_names = save_file_names;
+	}
+
+	public String[] getReal_file_names() {
+		return real_file_names;
+	}
+
+	public void setReal_file_names(String[] real_file_names) {
+		this.real_file_names = real_file_names;
 	}
 	
 	

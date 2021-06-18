@@ -1,0 +1,3 @@
+## src/main/java의 DAO, Service, Controller, ...
+**1. DAO**
+- DAO는 Data Access Object의 약자로 
