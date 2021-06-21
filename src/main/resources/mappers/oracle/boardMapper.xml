@@ -94,9 +94,10 @@ SELECT table_b.* FROM
 	(
 		SELECT * FROM tbl_board
 		<include refid="sqlWhere"></include>
+		ORDER BY bno DESC
 <![CDATA[
-	) table_a WHERE ROWNUM <= (#{queryStartNo}*#{queryPerPageNum})+#{queryPerPageNum}	
-) table_b WHERE table_b.rnum > #{queryStartNo}*#{queryPerPageNum} 
+	) table_a WHERE ROWNUM <=#{queryStartNo}+#{queryPerPageNum}	
+) table_b WHERE table_b.rnum > #{queryStartNo}
 ]]>		
 
 </select>
