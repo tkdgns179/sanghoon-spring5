@@ -70,7 +70,9 @@ public class AspectAdvice {
 			}
 			if (session.getAttribute("session_board_type") != null) {
 				board_type = (String) session.getAttribute("session_board_type");
-				pageVO.setBoard_type(board_type); // 검색 목표달성 여기서 항상 값을 가져가도록 구현됩니다
+				if (pageVO != null) { // Set은 pageVO가 null이 아닐경우만 실행되도록 처리
+					pageVO.setBoard_type(board_type); // 검색 목표달성 여기서 항상 값을 가져가도록 구현됩니다
+				}
 			}
 		}
 		// Aspect > 포인트 컷(Around) > 조인 포인트(메소드) > 매개변수로 구현한 결과를 리턴합니다

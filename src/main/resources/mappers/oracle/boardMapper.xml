@@ -63,7 +63,7 @@ view_count = NVL(view_count, 0) + 1
 WHERE bno = #{bno}
 </update>
 
-<select id="readBoard">
+<select id="readBoard" resultType="com.edu.vo.BoardVO">
 SELECT * FROM tbl_board WHERE bno = #{bno}
 </select>
 <!-- bno 필드변수가 자동증가가 되는 기능이 필요 seq.nextVal-->

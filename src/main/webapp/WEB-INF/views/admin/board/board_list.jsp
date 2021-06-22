@@ -35,13 +35,13 @@
 
             <div class="card-tools">
               <form name="form_search" action="/admin/board/board_list" methode="GET">
-                <div class="input-group input-group-md" style="width: 300px;">
+                <div class="input-group input-group-md" style="width: 400px;">
                   <select name="search_type" class="form-control pl-1 mx-3">
                     <option value="all">전체</option>
                     <option value="title">제목</option>
                     <option value="content">내용</option>
                   </select>
-                  <input type="text" name="search_keyword" class="form-control float-right" placeholder="Search">
+                  <input type="text" name="search_keyword" class="form-control float-right" placeholder="Search" style="width: 100px;">
                   <div class="input-group-append">
                     <button type="submit" class="btn btn-default">
                       <i class="fas fa-search"></i>
@@ -51,13 +51,14 @@
                 </div>
               </form>
             </div>
-
+			
             
-          <!--
-            <div class="card-tools">
-              <div class="input-group input-group-md">
-                <form name="form_search" action="board_list.html" method="GET" class="form-horizontal">
-                  <select class="form-control float-left" style="width: inherit;">
+          <!-- 
+            <h3 class="card-title" style="position: absolute;">목록</h3>
+            <div class="input-group input-group-md justify-content-end">
+              
+                <form name="form_search" action="/admin/board/board_list" method="GET" class="form-horizontal">
+                  <select name="search_type" class="form-control float-left" style="width: inherit;">
                     <option>전체</option>
                     <option>제목</option>
                     <option>내용</option>
@@ -70,7 +71,6 @@
                   </div>                                
                 </form>
               </div>
-            </div> 
           -->
            
             </div>
@@ -95,7 +95,7 @@
               	</c:if>
                 <!-- 아래 링크주소에 jsp에서 프로그램처리 예정 -->
                 <c:forEach var="boardVO" items="${listBoardVO}">
-                  <tr onclick="location.replace('/admin/board/board_view?bno=${boardVO.bno}')" style="cursor:pointer">
+                  <tr onclick="location.replace('/admin/board/board_view?bno=${boardVO.bno}&page=${pageVO.page}&search_type=${pageVO.search_type}&search_keyword=${search_keyword}')" style="cursor:pointer">
                     <td>${boardVO.bno}</td>
                     <td>${boardVO.board_type}</td>
                     <td>${boardVO.title}</td>

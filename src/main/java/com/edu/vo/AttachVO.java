@@ -3,6 +3,7 @@ package com.edu.vo;
 import java.util.Date;
 
 public class AttachVO {
+	
 	private String save_file_name; 	// UUID 클래스 (고유해시데이터를 생성하는 클래스)로 생성예정, 실제 저장된 파일명으로 사용
 	private String real_file_name; 	// 화면에 보이는 파일명
 	private Date reg_date; 			// 첨부파일 저장일시 
