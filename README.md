@@ -523,3 +523,6 @@ memberVO.setUser_pw(userPwEncoder);
 - 작업순서 : RUD -> C
 - R : readBoard(서비스)참조 -> board_view(컨트롤러) 작업예정
 - 에러상황 : ie11 이하계열에서 검색 후 페이지 선택시 400에러 발생 (크롬계열은 문제없음)
+
+#### 20210623(수) 작업
+- 

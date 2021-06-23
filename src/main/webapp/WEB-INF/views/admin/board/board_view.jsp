@@ -36,7 +36,7 @@
           <!-- /.card-header -->
           <!-- form start -->
           <!-- enctype 필수 없으면 첨부파일이 전송X -->
-          <form name="form_view" method="post" action="/admin/board/board_update_form" enctype="multipart/form-data">
+          <form name="form_view" method="get" action="/admin/board/board_update_form" enctype="multipart/form-data">
             <div class="card-body">
               <div class="form-group">
                 <label for="exampleInputEmail1">제목</label>
@@ -117,7 +117,6 @@
             <input name="search_keyword" value="${pageVO.search_keyword}" type="hidden" >
             <input name="bno" value="${boardVO.bno}" type="hidden" >
           </form>
-          	<input type="text" value="${boardVO.board_type}">
         </div>
         <!-- 콘텐츠 내용 END  -->
       </div><!-- /.container-fluid -->
@@ -134,13 +133,13 @@ $(document).ready(function(){
 	var form_view = $("form[name = 'form_view']");
 	$("#btn_list").click(function(){
 		form_view.attr("action", "/admin/board/board_list");
-		form_view.attr("method", "get"); // form_view의 기본 메소드를 post -> get
 		form_view.submit();
 	});
 	
 	$("#btn_delete").click(function(){
 		if (confirm('정말로 삭제하시겠습니까?')) { // Yes를 클릭하면 구현내용실행
 			form_view.attr("action", "/admin/board/board_delete");
+			form_view.attr("method", "get"); // form_view의 기본 메소드를 post -> get
 			form_view.submit();	
 		}
 	});

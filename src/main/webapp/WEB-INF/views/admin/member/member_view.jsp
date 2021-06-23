@@ -82,7 +82,7 @@
                -->
               <input type="hidden" name="page" value="${pageVO.page}">
               <input type="hidden" name="search_type" value="${pageVO.search_type}">
-              <input type="hidden" name="search_keyword" value="${pageVO.search_keyword}">
+              <%-- <input type="hidden" name="search_keyword" value="${pageVO.search_keyword}"> --%>
               <input type="hidden" name="user_id" value="${memberVO.user_id}">
             </div>
           </form>
@@ -108,7 +108,7 @@
 			}
 		});
 	$("#btn_list").click(function(){
-		var queryString = 'page=${pageVO.page}&search_type=${pageVO.search_type}&search_keyword=${search_keyword}'
+		var queryString = 'page=${pageVO.page}&search_type=${pageVO.search_type}'
 		location.replace('/admin/member/member_list?'+queryString);
 	});
  });

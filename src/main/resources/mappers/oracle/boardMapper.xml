@@ -54,7 +54,7 @@ title = #{title},
 content = #{content},
 writer = #{writer},
 update_date = systimestamp
-WHERE bno = #{bno]
+WHERE bno = #{bno}
 </update>
 
 <update id="updateViewCount">
