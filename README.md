@@ -503,7 +503,6 @@ memberVO.setUser_pw(userPwEncoder);
 - 해결책2 : insertBoard 쿼리에 return 값을 bno로 받아서 insertAttach처리
 - @Service까지는 DB(테이블) CRUD합니다.
 - 그러면, 첨부팡리은 @Controller에서 업로드/다운로드 로직 여기처리 @Controller 메소드부분이 난잡해짐
-------------------------------------------------------------------------------------------
 
 #### 20210621(월) 작업
 - 스프링 시큐리티: 로그인정보가 발생=세션, 즉, 로그인정보(세션)이 없으면, 홈페이지로 가도록 처리
@@ -524,5 +523,21 @@ memberVO.setUser_pw(userPwEncoder);
 - R : readBoard(서비스)참조 -> board_view(컨트롤러) 작업예정
 - 에러상황 : ie11 이하계열에서 검색 후 페이지 선택시 400에러 발생 (크롬계열은 문제없음)
 
-#### 20210623(수) 작업
-- 
+#### 20210623(수) 작업.
+- 시큐어코딩 방지메서드: <(O|o)bject... -> &lt;object (목적은 코딩태그를 특수문자로 변경 하는 메서드)
+- 실행되지 않는 코드가 생성됨.
+- 세션 사용법: 겟(Get),셋(Set),삭제(Remove)하는 방법
+- 세션 생성법: session.setAttribute("세션변수명","값");//로그인시 세션변수 생성.
+- 세션 값불러오기: session.getAttribute("세션변수명");
+- 세션 삭제하기: session.removeAttribute("세션변수명");//변수삭제
+- 전체세션삭제하기: session.invalidate();//전체 세션변수명을 삭제 = 세션초기화 = 로그아웃시 사용.
+- 수업전 작업예정: ie11이하계열에서 한글 검색 후 페이지 선택시 400에러발생(크롬계열은 문제없음)-AOP로처리.
+
+#### 20210624(목) 작업
+- file.getBytes() 설명 포함 board_update메서드 리뷰 후 수업진행.
+- 작업순서: CRUD -> UC 작업.
+- update: updateBoard(서비스)참조 -> board_update(컨트롤러)작업+jsp작업
+- 업데이트 이후엔 파일업로드 구현 후 /download 컨트롤러 실습예정.
+- 관리자단 댓글관리 CRUD 처리(6.RestAPI서버구현,JUnit대신에 크롬부메랑으로 테스트)
+
+#### 20210625(금) 작업

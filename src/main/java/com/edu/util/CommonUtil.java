@@ -1,15 +1,25 @@
 package com.edu.util;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -19,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.edu.dao.IF_BoardDAO;
 import com.edu.service.IF_MemberService;
 import com.edu.vo.MemberVO;
 
@@ -31,10 +42,100 @@ import com.edu.vo.MemberVO;
 @Controller
 public class CommonUtil {
 	// 멤버변수 생성
-	private Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+	@Resource(name = "uploadPath")
+	private String uploadPath; // root-context.xml 업로드경로 클래스빈 id값을 받아서 String변수 입력
 	
 	@Inject
 	private IF_MemberService memberService;
+	@Inject
+	private IF_BoardDAO boardDAO;
+	
+	private Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+	
+	public String getUploadPath() {
+		return uploadPath;
+	}
+	
+	@RequestMapping(value="/file_delete", method = RequestMethod.POST)
+	@ResponseBody
+	public String file_delete(@RequestParam("save_file_name")String save_file_name) { 
+		// Ajax는 예외처리를 스프링에 던지지 않고 try catch문으로 처리함
+		String result = ""; // Ajax로 보내는 변수
+		try {
+			boardDAO.deleteAttach(save_file_name);
+			File target = new File(uploadPath+"/"+save_file_name);
+			if (target.exists()) { // DB에서 삭제
+				target.delete();
+			}
+			result = "success";
+		} catch (Exception e) {
+			result = "fail: " + e.toString();
+		} 
+		return result; // Ajax에서 진입성공/실패를 확인가능
+	}
+	
+	// 다운로드 처리도 같은 페이지에서 결과값만 반환받는 @ResponseBody 사용
+	@RequestMapping(value="/download", method = RequestMethod.GET)
+	@ResponseBody
+	public FileSystemResource download(@RequestParam("save_file_name")String save_file_name, @RequestParam("real_file_name")String real_file_name, HttpServletResponse response) throws Exception {
+		// FileSystem~ 스프링 코어에서 제공하는 전용 파일처리 클래스
+		File file = new File(uploadPath + "/" + save_file_name);
+		response.setContentType("application/download; utf-8"); // 아래한글, ppt문서등에서 한글이 깨는 것을 방지하는 코드
+		real_file_name = URLEncoder.encode(real_file_name); // ie에서 URL 한글일 때
+		response.setHeader("Content-Disposition", "attachment; filename="+ real_file_name );
+		
+		return new FileSystemResource(file);
+	}
+
+	// 첨부파일 업로드/다운로드/삭제/인서트/수정에 모두 사용될 저장결로를 1개 지정해서 전역으로 사용
+	
+	// 페이지이동이 아닌 같은 페이지에 결과값만 반환하는 @ResponseBody 어노테이션 사용
+	@RequestMapping(value="/image_preview", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<byte[]> imagePreview(@RequestParam("save_file_name")String save_file_name, HttpServletResponse response) throws Exception {
+		// 파일을 입출력할 때는 파일을 byte형으로 입출력할 때 발생되는 통로인 스트림이 발생
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();	//출력 스트림
+		FileInputStream fis = new FileInputStream(uploadPath + "/"+ save_file_name);
+		
+		int readCount = 0;
+		byte[] buffer = new byte[1024]; // buffer: 임시저장소 1KB
+		byte[] fileArray = null; 		// 출력스트림의 결과를 저장하는 공간
+		// 반복문의 목적 : fis로 입력받은 save_file_name 바이트값이(배열) -1(더이상 읽을 내용이 없음)이 나올 때 까지
+		while ((readCount = fis.read(buffer)) != -1) {
+			// 입력스트림으로 받은 바이트형 데이터를 출력스트림을 통해 출력함 (파일입출력은 바이트로 구성되어있음)
+			baos.write(buffer, 0, readCount); // (rawData, 종료조건, 반복횟수)
+			// 결과는 baos에 누적된 결과가 들어감 -> jsp로 전달
+		}
+		fileArray = baos.toByteArray(); // baos 객체를 byte[]로 파싱합니다
+		fis.close(); 					// 입력스트림 닫기
+		baos.close();					// 아웃풋스트림 닫기
+		
+		// fileArray값을 jsp로 보내주는 작업, final 이 메소드에서만 사용하겠다는 명시
+		final HttpHeaders headers = new HttpHeaders();
+		String ext = FilenameUtils.getExtension(save_file_name);
+		// 이미지 확장자에 따라서 매칭되는 헤더값이 변해야지만, 이미지 미리보기가 정상으로 보입니다.
+		switch (ext.toLowerCase()) {
+		case "png":
+			headers.setContentType(MediaType.IMAGE_PNG);
+			break;
+		case "jpg":
+			headers.setContentType(MediaType.IMAGE_JPEG);
+			break;
+		case "gif":
+			headers.setContentType(MediaType.IMAGE_GIF);
+			break;
+		case "jpeg":
+			headers.setContentType(MediaType.IMAGE_JPEG);
+			break;
+		case "bmp":
+			headers.setContentType(MediaType.parseMediaType("image/bmp"));
+			break;
+		
+		default: break;
+		}
+		
+		return new ResponseEntity<byte[]>(fileArray, headers, HttpStatus.CREATED); // 생성자 초기값(rawData, header정보, http상태값)
+	}
 	
 	// XSS 크로스 사이트 스크립트 방지용 코드로 파싱하는 메소드
 	public String unScript(String data) {
@@ -57,13 +158,6 @@ public class CommonUtil {
 		return ret;
 	}
 	
-	// 첨부파일 업로드/다운로드/삭제/인서트/수정에 모두 사용될 저장결로를 1개 지정해서 전역으로 사용
-	@Resource(name = "uploadPath")
-	private String uploadPath; // root-context.xml 업로드경로 클래스빈 id값을 받아서 String변수 입력
-	
-	public String getUploadPath() {
-		return uploadPath;
-	}
 
 	// 첨부파일이 이미지인지 아닌지 확인하는 데이터생성
 	private ArrayList<String> checkImgArray = new ArrayList<String>(){
@@ -105,6 +199,9 @@ public class CommonUtil {
 		// 폴더에 저장할 PK파일명을 생성(아래)
 		UUID uid = UUID.randomUUID(); // 유니크 ID값 생성
 		String saveFileName = uid.toString() + "." + StringUtils.getFilenameExtension(realFileName);
+		// file의 MultipartFile 클래스형 객체  클래스형 자료(멤버변수, 메소드... )는 직접 저장을 할 수 없음
+		// 그래서, 바이트형으로 파싱(변환)해서 저장해야함 -> byte(8bits 01010101) 이진 비트형 자료로 변환필요  
+		// 자바 자료형 정수 : byte(bit로 구성) short int long, 실수형(소수점) : float < double
 		byte[] fileData = file.getBytes();
 		File target = new File(uploadPath, saveFileName);
 		FileCopyUtils.copy(fileData, target); // 물리적으로 폴더에 저장됩니다

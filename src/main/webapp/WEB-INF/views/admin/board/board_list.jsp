@@ -112,7 +112,7 @@
         <!-- 페이징처리 START -->
         <div class="row">
             <div class="col-12 text-right">
-            <a href="/admin/board/board_insert_form" class="btn btn-primary mb-3">글쓰기</a>
+            <a href="/admin/board/board_insert_form?page=1" class="btn btn-primary mb-3">글쓰기</a>
             <ul class="pagination justify-content-center">
               <li class="paginate_button page-item previous ${pageVO.prev == false? 'disabled':''}" id="example2_previous">
                 <a href="/admin/board/board_list?page=${pageVO.startPage - 1}&search_type=${pageVO.search_type}" aria-controls="example2"

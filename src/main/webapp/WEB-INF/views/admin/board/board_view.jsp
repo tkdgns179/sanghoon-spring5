@@ -70,7 +70,8 @@
                 
                 <c:if test="${boardVO.save_file_names[idx] != null}">
                 <div class="input-group">
-                  <div class="custom-file">
+                  <div class="">
+                  
                   	<!-- 첨부파일을 URL로 직접접근하지 못하기 때문에 다운로드전용 메소드생성 -->
                   	<!-- 첨부파일을 URL로 직접접근하지 못하기 때문에 컨트롤러로만 접근이 가능(다운로드전용 메소드 생성) -->
                     <a href="/download?save_file_name=${boardVO.save_file_names[idx]}&real_file_name=${boardVO.real_file_names[idx]}">
@@ -139,7 +140,7 @@ $(document).ready(function(){
 	$("#btn_delete").click(function(){
 		if (confirm('정말로 삭제하시겠습니까?')) { // Yes를 클릭하면 구현내용실행
 			form_view.attr("action", "/admin/board/board_delete");
-			form_view.attr("method", "get"); // form_view의 기본 메소드를 post -> get
+			form_view.attr("method", "post"); // form_view의 기본 메소드를 post -> get
 			form_view.submit();	
 		}
 	});

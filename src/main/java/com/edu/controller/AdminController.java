@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.edu.dao.IF_BoardDAO;
 import com.edu.service.BoardServiceImpl;
 import com.edu.service.IF_BoardService;
 import com.edu.service.IF_BoardTypeService;
@@ -47,7 +48,18 @@ public class AdminController {
 	@Inject
 	private IF_BoardService boardService;
 	@Inject
+	private IF_BoardDAO boardDAO;
+	@Inject
 	private CommonUtil commonUtil;
+	
+	// 게시물 등록 폼을 Get으로 호출합니다
+	@RequestMapping(value="/admin/board/board_insert_form", method = RequestMethod.GET)
+	public String board_insert_form(@ModelAttribute("pageVO")PageVO pageVO) throws Exception {
+		if (pageVO.getPage() == null) {
+			pageVO.setPage(1);
+		}
+		return "admin/board/board_insert";
+	}
 	
 	// RedirectAttribute 클래스로 redirect: 시  jsp값을 보냅니다 (사용자단에서 입력/수정/삭제 성공시 redirect사용할 때 데이터를 보낼 때 사용)
 	@RequestMapping(value="/admin/board/board_update", method = RequestMethod.POST)
@@ -56,26 +68,36 @@ public class AdminController {
 		// List 객체(2차원 배열)의 크기는 .size로 구함 // 1차원 배열은 length로 구함  
 		String[] save_file_names = new String[files.length];
 		String[] real_file_names = new String[files.length];
-		int idx = 0;
+		int index = 0;
 		for (MultipartFile file : files) { // files
 			if (file.getOriginalFilename() != "") { // 전송된 첨부파일이 있다면 실행
-				int sun = 0; // DB 테이블에 저장된 순서
+				int sun = 0; // DB 테이블에 저장된 순서에 대한 인덱스 초기값변수
 				// 아래 반복문의 목적 : jsp폼에서 기존 1번위치에 기존파일이 있으면, 기존파일을 지우고 신규 파일을 덮어 씌우는 로직
 				for(AttachVO file_name : delFiles) { // 기존파일을 가져와서 반복
-					if(idx == sun) {
+					if(index == sun) { // jsp폼의 파일의 순서와 DB에 저장된 파일의 순서가 일치할 때
 						File target = new File(commonUtil.getUploadPath(), file_name.getSave_file_name()); 
 						if(target.exists()) {
 							target.delete(); // 물리적인 파일 지우는 명령
+							boardDAO.deleteAttach(file_name.getSave_file_name());
 						}
 					}
 					sun++;
 				}
-				save_file_names[idx] = commonUtil.fileUpload(file); // jsp폼에서 전송된 파일
-				real_file_names[idx] = file.getOriginalFilename(); 	// UI용 이름 임시저장
+				save_file_names[index] = commonUtil.fileUpload(file); // jsp폼에서 전송된 파일
+				real_file_names[index] = file.getOriginalFilename(); 	// UI용 이름 임시저장
 						
 			}
+			else {
+				save_file_names[index] = null;
+				real_file_names[index] = null;
+			}
+			index++;
 		}
+		boardVO.setSave_file_names(save_file_names);
+		boardVO.setReal_file_names(real_file_names);
 		
+		
+		// 시큐어코딩 추가부 START ------------------------------------------------------------------------
 		String rawContent = boardVO.getContent();
 		String secContent = commonUtil.unScript(rawContent);
 		boardVO.setContent(secContent);
@@ -83,6 +105,7 @@ public class AdminController {
 		String rawTitle = boardVO.getTitle();
 		String secTitle = commonUtil.unScript(rawTitle);
 		boardVO.setTitle(secTitle);
+		// 시큐어코딩 추가부 END ------------------------------------------------------------------------
 		
 		boardService.updateBoard(boardVO);
 		// 첨부파일 작업전, 시큐어코딩 : 입력/수정시 시큐어코딩 적용, 뷰화면만 시큐어를 적용했다면 이번엔 입력수정시 적용함
