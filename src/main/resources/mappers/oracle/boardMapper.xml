@@ -13,7 +13,7 @@ DELETE FROM tbl_attach WHERE save_file_name = #{save_file_name}
 </delete>
 
 <select id="readAttach" resultType="com.edu.vo.AttachVO">
-SELECT * FROM tbl_attach WHERE bno = #{bno}
+SELECT * FROM tbl_attach WHERE bno = #{bno} ORDER BY reg_date ASC
 </select>
 
 <!--
@@ -31,7 +31,7 @@ INSERT INTO tbl_attach
 (save_file_name, real_file_name, reg_date, bno)
 VALUES
 (
-#{save_file_name}, #{real_file_name}, sysdate, #{bno}	
+#{save_file_name}, #{real_file_name}, systimedate, #{bno}	
 )
 </insert>
 <!--

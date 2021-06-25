@@ -52,6 +52,26 @@ public class AdminController {
 	@Inject
 	private CommonUtil commonUtil;
 	
+	@RequestMapping(value="/admin/board/board_insert", method = RequestMethod.POST)
+	public String board_insert(@RequestParam("file")MultipartFile[] files, BoardVO boardVO) throws Exception {
+		String[] save_file_names = new String[files.length];
+		String[] real_file_names = new String[files.length];
+		int index = 0;
+		for (MultipartFile file: files) {
+			if(file.getOriginalFilename() != "") {
+				save_file_names[index] = commonUtil.fileUpload(file); 	// 물리적으로 파일을 저장후 리턴값으로 uuid이름을 스트링으로 리턴해줌
+				real_file_names[index] = file.getOriginalFilename(); 	// UI용 파일이름
+			}
+			index++;
+		}
+		// 기존 신규등록 jsp폼에서 보낸 boardVO값 아래 file에 대한 임시변수값을 저장하는 로직
+		boardVO.setSave_file_names(save_file_names);
+		boardVO.setReal_file_names(real_file_names);
+		boardService.insertBoard(boardVO); // DB에 저장
+		return "redirect:/admin/board/board_list"; // 새로고침 무한등록을 방지하기위해  redirect 사용
+		// 게시판 신규등록시 자동으로 page=1로 이동하게 설정
+	}
+	
 	// 게시물 등록 폼을 Get으로 호출합니다
 	@RequestMapping(value="/admin/board/board_insert_form", method = RequestMethod.GET)
 	public String board_insert_form(@ModelAttribute("pageVO")PageVO pageVO) throws Exception {
@@ -183,7 +203,6 @@ public class AdminController {
 		boardVO.setSave_file_names(save_file_names); // 파싱한 결과를 boardVO의 필드에 set해줌 // 다운로드 로직
 		boardVO.setReal_file_names(real_file_names); // 화면출력 
 		model.addAttribute("boardVO", boardVO);  // 게시물 + 첨부파일
-		// TODO *업로드한 파일이 이미지인지 아닌지 확인하는 용도의 데이터 추가예정* 이미지라면 미리보기 <img src="">를 사용하기위해서
 		model.addAttribute("checkImgArray", commonUtil.getCheckImgArray());
 		return "/admin/board/board_view";
 	}

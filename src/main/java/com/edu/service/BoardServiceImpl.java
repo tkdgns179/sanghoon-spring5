@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.edu.dao.IF_BoardDAO;
+import com.edu.dao.IF_ReplyDAO;
 import com.edu.vo.AttachVO;
 import com.edu.vo.BoardVO;
 import com.edu.vo.PageVO;
@@ -21,6 +22,8 @@ import com.edu.vo.PageVO;
 public class BoardServiceImpl implements IF_BoardService{
 	@Inject
 	private IF_BoardDAO boardDAO;
+	@Inject
+	private IF_ReplyDAO replyDAO;
 	
 	@Override
 	public List<AttachVO> readAttach(Integer bno) throws Exception {
@@ -43,11 +46,10 @@ public class BoardServiceImpl implements IF_BoardService{
 		 * 2. 게시물 	삭제 (에러로 인해 삭제가 안되어 체크포인트로 롤백해야할 상황이 생김)
 		 * 위와 같은 상황을 방지하는 목적의 @Transantional
 		 * 특이사항 : 첨부파일은 DB만 삭제 + 실제 업로드된 파일 삭제 2개를 실행해야함 
-		 * TODO + 댓글 삭제도 나중에 추가
 		 */
 		
 		boardDAO.deleteAttachAll(bno);
-		// TODO *여기는 댓글삭제 구현후 메소드를 추가합니다* 
+		replyDAO.deleteReplyAll(bno);
 		boardDAO.deleteBoard(bno);
 	}
 	

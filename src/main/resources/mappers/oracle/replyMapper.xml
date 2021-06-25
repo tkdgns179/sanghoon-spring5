@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="replyMapper">
+
+<!-- 게시물을 지울 때, 댓글내용을 먼저 지우는 쿼리 -->
+<delete id="deleteReplyAll">
+DELETE FROM tbl_reply WHERE bno = #{bno}
+</delete>
+
+<delete id="deleteReply">
+DELETE FROM tbl_reply WHERE rno = #{rno}
+</delete>
+
+<select id="updateReply">
+UPDATE tbl_reply SET
+reply_text = #{reply_text},
+update_date = systimestamp
+WHERE rno = #{rno}
+</select>
+
+<!-- 댓글을 등록할 때, 게시판 테이블에 reply_count필드에 값이 +1 발생 -->
+<!-- 댓글을 삭제할 때, 게시판 테이블에 reply_count필드에 값이 -1 발생 -->
+<update id="replyCountUpdate">
+UPDATE tbl_board SET 
+reply_count = reply_count + #{count} 
+WHERE bno = #{bno}
+</update>
+
+<insert id="insertReply">
+	<selectKey keyProperty="rno" resultType="int" order="BEFORE">
+	SELECT seq_rno.nextval FROM dual
+	</selectKey>
+	INSERT INTO tbl_reply
+	(rno, reply_text, replyer, reg_date, bno)
+	VALUES
+	(#{rno}, #{reply_text}, #{replyer}, systimestamp, #{bno})
+</insert>
+
+<select id="countReply" resultType="int">
+SELECT COUNT(*) FROM tbl_reply WHERE bno = #{bno}
+</select>
+
+<select id="selectReply" resultType="com.edu.vo.ReplyVO">
+SELECT rnum, tableB.* FROM
+(
+	SELECT ROWNUM AS rnum, tableA.* FROM
+	(
+		SELECT * FROM tbl_reply
+		WHERE bno = #{bno}
+		ORDER BY rno desc
+	) tableA 
+<![CDATA[	
+	WHERE ROWNUM <= #{queryStartNo} + #{queryPerPageNum} 
+) tableB
+WHERE rnum > #{queryStartNo}  
+]]>
+</select>
+</mapper>
