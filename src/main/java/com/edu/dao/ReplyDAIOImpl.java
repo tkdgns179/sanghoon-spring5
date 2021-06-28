@@ -36,7 +36,7 @@ public class ReplyDAIOImpl implements IF_ReplyDAO{
 
 	@Override
 	public void updateReply(ReplyVO replyVO) throws Exception {
-		sqlSession.update("replyMapper,updateReply", replyVO);
+		sqlSession.update("replyMapper.updateReply", replyVO);
 	}
 
 	@Override
@@ -59,9 +59,13 @@ public class ReplyDAIOImpl implements IF_ReplyDAO{
 	}
 
 	@Override
-	public List<ReplyVO> selectReply(PageVO pageVO) throws Exception {
+	public List<ReplyVO> selectReply(Integer bno, PageVO pageVO) throws Exception {
 		// sqlSession Template ("매퍼쿼리명	","매개변수명")
-		return sqlSession.selectList("replyMapper.selectReply", pageVO);
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("queryStartNo", pageVO.getQueryStartNo());
+		paramMap.put("queryPerPageNum", pageVO.getQueryPerPageNum());
+		paramMap.put("bno", bno);
+		return sqlSession.selectList("replyMapper.selectReply", paramMap);
 	}
 
 }

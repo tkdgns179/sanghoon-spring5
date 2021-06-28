@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="replyMapper">
-
-<!-- 게시물을 지울 때, 댓글내용을 먼저 지우는 쿼리 -->
+<!-- 게시물을 지울때, 댓글내용을 먼저 지우는 쿼리 -->
 <delete id="deleteReplyAll">
-DELETE FROM tbl_reply WHERE bno = #{bno}
+delete from tbl_reply where bno = #{bno}
 </delete>
 
 <delete id="deleteReply">
-DELETE FROM tbl_reply WHERE rno = #{rno}
+delete from tbl_reply where rno = #{rno}
 </delete>
 
-<select id="updateReply">
-UPDATE tbl_reply SET
-reply_text = #{reply_text},
-update_date = systimestamp
-WHERE rno = #{rno}
-</select>
-
-<!-- 댓글을 등록할 때, 게시판 테이블에 reply_count필드에 값이 +1 발생 -->
-<!-- 댓글을 삭제할 때, 게시판 테이블에 reply_count필드에 값이 -1 발생 -->
-<update id="replyCountUpdate">
-UPDATE tbl_board SET 
-reply_count = reply_count + #{count} 
-WHERE bno = #{bno}
+<update id="updateReply">
+update tbl_reply set
+reply_text = #{reply_text}
+,update_date = systimestamp
+where rno = #{rno}
 </update>
 
+<!-- 댓글을 등록할때 게시판테이블에 reply_count필드에 값이 +1발생 -->
+<!-- 댓글을 삭제할때 게시판테이블에 reply_count필드에 값이 -1발생 -->
+<update id="replyCountUpdate">
+update tbl_board set 
+reply_count = reply_count + #{count}
+where bno = #{bno}
+</update>
+
+<!-- 댓글에서는 Read가 별도로 없이 Select 1개로 구현이됨 -->
 <insert id="insertReply">
 	<selectKey keyProperty="rno" resultType="int" order="BEFORE">
-	SELECT seq_rno.nextval FROM dual
+	select seq_rno.nextval from dual
 	</selectKey>
-	INSERT INTO tbl_reply
+	insert into tbl_reply 
 	(rno, reply_text, replyer, reg_date, bno)
-	VALUES
+	values
 	(#{rno}, #{reply_text}, #{replyer}, systimestamp, #{bno})
 </insert>
 
 <select id="countReply" resultType="int">
-SELECT COUNT(*) FROM tbl_reply WHERE bno = #{bno}
+select count(*) from tbl_reply where bno = #{bno}
 </select>
 
 <select id="selectReply" resultType="com.edu.vo.ReplyVO">
-SELECT rnum, tableB.* FROM
+select rnum, tableB.* from 
 (
-	SELECT ROWNUM AS rnum, tableA.* FROM
+	select rownum AS rnum, tableA.* from 
 	(
-		SELECT * FROM tbl_reply
-		WHERE bno = #{bno}
-		ORDER BY rno desc
-	) tableA 
-<![CDATA[	
-	WHERE ROWNUM <= #{queryStartNo} + #{queryPerPageNum} 
+		select * from tbl_reply
+		where bno = #{bno}
+		order by rno desc
+	) tableA
+<![CDATA[
+	where rownum <= #{queryStartNo}+#{queryPerPageNum}
 ) tableB
-WHERE rnum > #{queryStartNo}  
-]]>
+where rnum > #{queryStartNo}
+]]>	
 </select>
 </mapper>

@@ -48,9 +48,9 @@ public class ReplyServiceImpl implements IF_ReplyService{
 	}
 
 	@Override
-	public List<ReplyVO> selectReply(PageVO pageVO) throws Exception {
+	public List<ReplyVO> selectReply(Integer bno, PageVO pageVO) throws Exception {
 		// DAO 객체 사용
-		return replyDAO.selectReply(pageVO);
+		return replyDAO.selectReply(bno, pageVO);
 	}
 
 }
