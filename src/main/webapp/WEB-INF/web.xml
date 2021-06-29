@@ -45,4 +45,13 @@
 	  <filter-name>encoding</filter-name>
 	  <url-pattern>/*</url-pattern>
 	</filter-mapping>
+	<!-- URL요청 Endpoint에서 PATCH, DELETE, PUT 전송방식은 예전에 존재하지 않아서 크로스브라우징 확장필터 추가 -->
+	<filter>
+	    <filter-name>hiddenHttpMethodFilter</filter-name>
+	    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	    <filter-name>hiddenHttpMethodFilter</filter-name>
+	    <url-pattern>/</url-pattern>
+	</filter-mapping>
 </web-app>

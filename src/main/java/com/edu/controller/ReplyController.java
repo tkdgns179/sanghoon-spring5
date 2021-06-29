@@ -46,10 +46,18 @@ public class ReplyController {
 	private IF_ReplyService replyService;
 	
 	// 댓글 삭제를 Restfull로 처리
-	@RequestMapping(value="reply/reply_delete", method = RequestMethod.DELETE)
-	public ResponseEntity<String> reply_delete() {
+	@RequestMapping(value="/reply/reply_delete/{bno}/{rno}", method = RequestMethod.DELETE)
+	public ResponseEntity<String> reply_delete(@PathVariable("bno")Integer bno, @PathVariable("rno")Integer rno) {
 		ResponseEntity<String> result = null;
-		// TODO 삭제기능 구현
+		ReplyVO replyVO = new ReplyVO();
+		replyVO.setBno(bno);
+		replyVO.setRno(rno);
+		try {
+			replyService.deleteReply(replyVO);
+			result = new ResponseEntity<String>("success", HttpStatus.OK);
+		} catch (Exception e) {
+			result = new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		return result;
 	}
 	
@@ -93,8 +101,8 @@ public class ReplyController {
 	public ResponseEntity<Map<String, Object>> reply_list(@PathVariable("bno")Integer bno, @PathVariable("page")Integer page) {
 		ResponseEntity<Map<String, Object>> result = null;
 		/*
-		 * Map<String, Object> dummyMap1= new HashMap<String, Object>(); Map<String,
-		 * Object> dummyMap2= new HashMap<String, Object>(); Map<String, Object>
+		 * Map<String, Object> dummyMap1= new HashMap<String, Object>(); 
+		 * Map<String, Object> dummyMap2= new HashMap<String, Object>(); Map<String, Object>
 		 * dummyMap3= new HashMap<String, Object>();
 		 * 
 		 * dummyMap1.put("rno", 1); dummyMap1.put("reply_text", "댓글테스트1");
