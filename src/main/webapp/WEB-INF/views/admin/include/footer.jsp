@@ -44,5 +44,38 @@
 <!-- <script src="/resources/admin/dist/js/demo.js"></script> -->
 </body>
 </html>
+<style>
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active
+{
+background-color: #fff;
+color: #000;
+}
+</style>
 <!-- **여기까지 footer.jsp영역** -->
-    
+ <script>
+ // 로그아웃 버튼처리
+ $("#btn_logout").click(function(){
+	location.replace('/logout'); // security-context.xml에  설정된 /logout 호출 
+ });
+ 
+ // 왼쪽 메뉴 선택시 active(bootstrap클래스)를  동적으로 추가하는 코드
+ $(document).ready(function(){
+	// 현재 선택한 url값을 기준으로 삼습니다
+	var current = location.pathname;
+	var current2 = current.split("/")[2]; // 위 current 변수값을 /로 분해해서 배열로 만든후 3번째 인덱스값을 추출
+	// 제이쿼리의 반복문 each 
+	$(".nav-treeview li a").each(function(){ // indexOf 찾는 문자열이 없으면 -1을 리턴합니다
+		if($(this).attr('href').indexOf(current2) != -1) { // URL에서 current2와 같은값이 있으면
+			if(current2 != "board") { // 게시물관리 메뉴만 제외하고, 다른메뉴에 적용 코드
+				$(this).addClass("active");
+			}
+		}
+		else {
+			$(this).removeClass("active");
+		}
+	});
+	
+ });
+ 
+ 
+ </script>

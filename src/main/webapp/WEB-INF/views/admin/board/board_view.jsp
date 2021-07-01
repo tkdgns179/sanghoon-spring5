@@ -333,7 +333,32 @@ var replyList = function() {
 $(document).ready(function(){
 	// 댓글 모달창 삭제버튼의 액션처리
 	$("#btn_reply_delete").click(function(){
-		
+		// 댓글을 삭제할 때 필요한 변수확인 2개 rno(삭제쿼리사용), bno(게시물댓글카운트업데이트)
+		var rno = $("#rno").val(); // modal창의 input태그의 값을 가져옵니다
+		var bno = "${boardVO.bno}";
+		$.ajax({
+			type : "delete",
+			url: "/reply/reply_delete/"+bno+"/"+rno, // endpoint = @RestController의 @RequestMapping의 value값을 가르킴
+			dataType: "text", // @RestController에서 설정을보고 결정함 text : String , json : Map<String, Object>
+			// data: "", // 처리할 값을 보내는 데이터 형식 -> PathVariable으로 지정하기 때문에 json을 사용하지않음
+			// headers: "", // 개발자도구의 네트워크항목에서 확인가능 // 전송방식 때문에 필요하나 PathVariable로 사용하여 필요하지않음
+			success: function(result) {
+				if (result == "success") {
+					alert("댓글이 삭제되었습니다");
+					// 삭제후 modal 숨긴후, 댓글카운트 -1 처리, 댓글 리스트 리프레시(렌더링)
+					$("#modal-reply").modal("hide");
+					var reply_count = $("#reply_count").text();
+					$("#reply_count").text(parseInt(reply_count) - 1);
+					replyList();
+				}
+				
+			},
+			error: function() {
+				alert("RestAPI서버가 작동하지 않습니다 다음에 이용해주세요")
+			}
+			
+			
+		});
 	});
 	// 댓글 모달창 수정버튼의 액션처리
 	$("#btn_reply_update").click(function(){
@@ -410,7 +435,8 @@ $(document).ready(function(){
 				$("#reply_count").text(parseInt(reply_count) + 1); // 문자를 숫자로 바꿔서 더해줌
 				// 댓글을 신규등록후 댓글페이징의 1페이지로 이동
 				$("#reply_page").val("1"); // input 히든타입에 value값을 넣어서 이동시킬 예정
-				// 댓글입력후 화면에 댓글목록 뿌리는 함수 만들 예정 
+				// 댓글 입력후 댓글 목록 재출력
+				replyList();
 			},
 			error : function(){
 				alert("RestAPI서버가 작동하지 않습니다 잠시후 이용해주세요")

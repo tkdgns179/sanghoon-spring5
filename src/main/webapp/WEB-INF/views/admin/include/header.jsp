@@ -57,7 +57,7 @@
   <!-- Main Sidebar Container 왼쪽 사이드메뉴내용-->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a href="home.html" class="brand-link">
+    <a href="/admin" class="brand-link">
       <img src="/resources/admin/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <span class="brand-text font-weight-light">Spring 5 프로젝트</span>
     </a>
@@ -87,7 +87,7 @@
 
       <!-- Sidebar Menu 메뉴 시작 -->
       <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <ul class="nav nav-pills nav-sidebar flex-column nav-treeview" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           
@@ -123,7 +123,7 @@
               <!-- 위 게시판 생성관리에서 만든 게시판 개수에 따라서 자동 증가(아래) -->
               <c:forEach var="boardTypeVO" items="${listBoardTypeVO}">
               <li class="nav-item">
-                <a href="/admin/board/board_list?board_type=${boardTypeVO.board_type}&search_keyword=" class="nav-link">
+                <a href="/admin/board/board_list?board_type=${boardTypeVO.board_type}&search_keyword=" class="nav-link ${boardTypeVO.board_type == session_board_type? 'active':''}">
                   <i class="far fa-dot-circle nav-icon"></i>
                   <p>${boardTypeVO.board_name}</p>
                 </a>
@@ -131,7 +131,7 @@
               </c:forEach>
             </ul>
           </li>
-          
+           
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

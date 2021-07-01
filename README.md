@@ -581,12 +581,51 @@ memberVO.setUser_pw(userPwEncoder);
 - 스프링시큐리티 로그인및 권한체크 설정 후 사용자단 로그인 구현 예정.(관리자단 끝 이면서, 사용자단 시작)
 - 사용자단 회원가입, 수정, 탈퇴 JSP기능 추가예정.
 
-#### 20210629(화) 작업
+#### 20210629(화) 작업.
+- json데이터(1개레코드=K:V무제한형태)가 자바의 List데이터(1개레코드=K:V제한형)와 대부분 같음. 틀린점은 K:V 형태는 같으나 V값이 무제한,제한
+- 게시물 상세보기 페이지에는 
+- 게시물관련내용: 컨트롤러에서 보낸 model객체에 담긴 변수값을 jps사용.
+- 댓글 관련내용: Rest컨트롤러에서 보낸 ResponseEntity객체에 담긴 변수값을 jsp사용.
+- RestAPI가 주로 사용되는 곳은: 1페이지로 서비스가 이루어지는 곳에서 주로 RestAPI를 사용
+- 데이터를 시각화하는 페이지에 주로사용: 구글맵,네이버맵기반의 데이터를 시각화해서 수익창출 서비스.
+- RestAPI가 스프링과 노드js 연동하면 + 구글맵, RestAPI실시간으로 결과공유할 수 있게 만든것.
 - 수업전 아래 내용 확인 후 진도 나갈 예정 입니다.
 - reply컨트롤러에서 requestMapping 밸류값 넣을때 절대경로인 /로 시작하시는 것이 맞습니다.
-- Rest컨트롤러에서 CRUD중 Delete마무리.
-- jsp에서 $.ajax를 이용해서 RestAPI서버 사용. -댓글 마무리...
-- $.ajax로 CRUD를 구현할 때는 전송값은 json데이터로 보내고, 받을 때는 List(json), CUD(문자열 String)
-- ajax 전송방식은 폼태그가 필요없음 submit으로 보내지 않음 
-- 스프링시큐리티 로그인및 권한체크 설정 후 사용자단 로그인 구현 예정.(관리자단 끝 이면서, 사용자단 시작)
+- Rest컨트롤러에서 CRUD중 Delete마무리OK.
+- jsp에서 1페이지만 작업하면 끝 $.ajax를 이용해서 RestAPI서버 사용.
+- $.ajax로 CRUD를 구현할때는 전송값은 json데이터(submit으로 않보냄)로 보내고(form태그가 필요없음),:submit은 폼태그가 있을때만 작동되는 브라우저 내장 명령입니다.
+- , 받은때는 List(json),CUD(문자열)
+- 댓글 RUD는 모달(팝업)창에서 작업시작.
+
+#### 20210630(수) 작업.
+- 댓글 Delete 구현 후 마무리OK.
+- 스프링시큐리티 로그인및 권한체크 설정 후 사용자단 로그인 구현 예정.(관리자단 끝 이면서, 사용자단 시작): 사용자단 로그인 / 로그아웃 기능 처리.
 - 사용자단 회원가입, 수정, 탈퇴 JSP기능 추가예정.
+
+#### 20210701(목) 작업
+- 어제 작업한 security-context를 데이터 변수값 이동기준을 다시 설명
+- 수업 시작전 깃허브 암호정책 변경으로 토큰사용하는 방법 공유
+- 람다식사용예 : https://github.com/miniplugin/SQLite-kimilguk/blob/master/app/src/main/java/com/human/sqlite_kimilguk/MainActivity.java
+- 어제 시큐리티적용 부분 확인(web.xml에서 누락된 부분 모두 추가)
+
+```
+<!-- 스프링 시큐리티때문에 필터(걸러주는)추가 -->
+<filter>
+	<filter-name>springSecurityFilterChain</filter-name>
+	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
+<filter-mapping>
+	<filter-name>springSecurityFilterChain</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+```
+- 어제 시큐리티 context 누락된 부분 추가(security-context.xml)
+
+```
+<security:authentication-provider>
+	<security:password-encoder ref="passwordEncoder" />
+</security:authentication-provider>
+<!-- 위 쿼리에서 사용할 패스워드 암호화 id passwordEncoder 빈 클래스를 생성(아래) -->
+<bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+```
+- 스프링 시큐리티
