@@ -628,4 +628,36 @@ memberVO.setUser_pw(userPwEncoder);
 <!-- 위 쿼리에서 사용할 패스워드 암호화 id passwordEncoder 빈 클래스를 생성(아래) -->
 <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 ```
-- 스프링 시큐리티
+- 스프링시큐리티 로그인및 권한체크 설정 후 사용자단 로그인 구현 예정.(관리자단 끝 이면서, 사용자단 시작): 사용자단 로그인 / 로그아웃 기능 처리OK.
+
+#### 20210702(금) 작업.
+- 수정/탈퇴(마이페이지) JSP기능 추가 마무리OK.
+- 사용자단 회원가입 작업OK.
+- form폼에서 name은 VO/매퍼쿼리 필드명동일, id는 선택해서 jsp(UI)단에서 제어(j쿼리)할때 사용.
+- 사용자단 에러발생시 이쁘게 보이게 화면처리.
+- error_spring.jsp 만듭니다.
+- 위 jsp를 에러발생시(Exception) 무조건 나오게 처리: AOP중 @ControllerAdvice로 구현합니다.
+- 위 어드바이스컨트롤러에서 에러메세지를 캐치해서 jsp에러페이지로 보내서, 에레메세지를 이쁘게 확인합니다.
+- 404에러는 컨트롤러에서 발생되지 않습니다. 그래서, 별도파일을 만들어야 합니다.
+- 톰캣서버에서 발생되는 에러코드404이기 때문에 web.xml에서 설정을 추가합니다.
+- 404코드가 발생시 error_404.jsp와 바인딩되는 설정입니다.
+- 홈컨트롤러에서 Get /home/error/error_404경로추가
+- -----------------------------------------
+- 헤로쿠 클라우드에 배포준비예정.
+- 헤로쿠 클라우드는 미국의 회사로서 컨테이너를 제공하는 회사
+- 컨테이너는 리눅스OS>톰캣WAS>자바JVM>스프링>컨테이너에 포함됨 기본.
+- 외부 서버는(DB) Add on이라는 이름으로 사용가능
+- 무료: PostgeresDB(조건), 마리아DB(신용카드등록필수)
+- 유료: Mysql(유료)
+- HsqlDB로 연동해서 헤로쿠에 배포예정. http://hsqldb.org/
+- 100% Java Database: 임베디드DB, 메모리DB, 서버를 설치할 필요 Hsql이라는 Maven모듈만 있으면가능
+- 프로토타입 작업시 주로 사용.(특징, 쿼리는 Mysql과 99% 동일)
+
+#### 20210705(월) 작업예정
+- Heroku Cloud에서 App생성
+- 우리 프로젝트에 HsqlDB를 생성 (Maven에서 Hsql모듈을 업데이트하면, 사용가능)
+- 오라클은 로컬에서 개발, HsqlDB는 Heroku Cloud용을 개발할 수 있도록 root-context.xml에서 설정예정
+- 현재까지 작업한 소스를 (자기 성함)kimsanghoon-spring5.herokuapp.com으로 배포할 예정
+- 관리자단 대시보드 작업예정
+- 사용자단 게시물관리 CRUD 작업예정
+- 사용자단 메인페이지(대시보드) 작업예정

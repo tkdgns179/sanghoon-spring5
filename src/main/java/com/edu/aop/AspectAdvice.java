@@ -14,9 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.edu.service.IF_BoardTypeService;
 import com.edu.vo.BoardTypeVO;
@@ -91,6 +93,22 @@ public class AspectAdvice {
 		// Aspect > 포인트 컷(Around) > 조인 포인트(메소드) > 매개변수로 구현한 결과를 리턴합니다
 		Object result = pjp.proceed(); // 여기서 조인포인트가 실행이 됩니다.
 		return result;
+	}
+	
+	// 이 메소드는 컨트롤러에서 Exception이 발생했을 때, 여기서 intercept(가로채기)해서 
+	// 에러메세지를 개발자가 작성한 jsp화면에 뿌려주는 역할 -> prevPage, exception 변수 2개 전송
+	// ModelAndView는 Model과 View기능을 합친 클래스임
+	@ExceptionHandler(Exception.class)
+	public ModelAndView errorModelAndView(Exception ex, HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView();
+		// 이전페이지로 돌아가기용 데이터 생성
+		String referer = request.getHeader("Referer"); // 크롬>네트워크>파일>Referer>이전페이지 URL이 존재
+		request.getSession().setAttribute("session_prevPage", referer);
+		
+		// 컨트롤러에서 받은 Exception 객체를 ModelAndView로 전달 
+		modelAndView.addObject("exception", ex);
+		modelAndView.setViewName("home/error/error_spring");
+		return modelAndView;
 	}
 	
 	// 아래 메소드는 컨트롤러의 메소드 실행 전에 값을 생성해서 model객체에 담아서 jsp로 자료를 전송

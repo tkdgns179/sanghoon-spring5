@@ -69,6 +69,7 @@ BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
  -->
 <security:authentication-manager>
 	<security:authentication-provider>
+		<!-- no, password, enabled로 alias해줘야 인식이가능함 // enabled는 그대로이기때문에 변경안해주어도됨  -->
 		<security:jdbc-user-service 
 		data-source-ref="dataSource"
 		users-by-username-query="select user_id as no,user_pw as password, enabled from tbl_member where user_id = ?"

@@ -41,6 +41,40 @@ public class HomeController {
 	// 이제부터 일반적인 개발방식 VO -> 쿼리 -> DAO ->Service (관리자단에서 여기까지 끝) 
 	// 관리자단에서 작성한 Service 사용자단에서 그대로 이용,  컨트롤러부터 분리해 작업 -> jsp
 	
+	// 404 File Not Found 에러 처리하는 GET 호출 추가
+	@RequestMapping(value = "/home/error/error_404", method = RequestMethod.GET)
+	public String error_404(HttpServletRequest request, Model model) {
+		model.addAttribute("prevPage", request.getHeader("Referer"));
+		return "/home/error/error_404";
+	}
+	
+	// 회원가입 폼 호출 POST방식
+	@RequestMapping(value = "/join", method = RequestMethod.POST)
+	public String join(MemberVO memberVO, RedirectAttributes rdat) throws Exception {
+		// jsp폼에서 levels를 ROLE_ADMIN으로 해킹할까봐 여기서 강제로 입력합니다
+		BCryptPasswordEncoder passwordEncode = new BCryptPasswordEncoder();
+		memberVO.setUser_pw(passwordEncode.encode(memberVO.getUser_pw()));
+		memberService.insertMember(memberVO);
+		rdat.addFlashAttribute("msg", "회원가입"); //회원가입 이(가) 성공했습니다.
+		return "redirect:/login_form";
+	}
+	
+	
+	// 회원가입 폼 호출 Get방식
+	@RequestMapping(value = "/join_form", method = RequestMethod.GET)
+	public String join_form() throws Exception {
+		
+		return "home/join";
+	}
+	
+	// 마이페이지에서 회원탈퇴 POST방식 처리만
+	@RequestMapping(value = "/member/mypage_leave", method = RequestMethod.POST)
+	public String mypage_leave(MemberVO memberVO,RedirectAttributes rdat) throws Exception {
+ 		memberService.updateMember(memberVO);
+		// rdat.addFlashAttribute("msg", "회원탈퇴"); // logout으로 넘어가기 때문에 실행되지못함
+		return "redirect:/logout";
+	}
+	
 	// 마이페이지 회원정보수정 POST방식 처리 후 msg를 hidden값으로 jsp로 전송합니다
 	@RequestMapping(value = "/member/mypage", method = RequestMethod.POST)
 	public String mypage(MemberVO memberVO,RedirectAttributes rdat) throws Exception {
