@@ -55,11 +55,11 @@
 	<property name="targetMethod" value="main" />
 	<property name="arguments">
 		<list>
-			<value>- -url</value>
+			<value>--url</value>
 			<value>jdbc:hsqldb:file:c:/embeded/hsql_file.db;hsqldb.lock_file=false</value>
-			<value>- -user</value>
+			<value>--user</value>
 			<value>sa</value>
-			<value>- -password</value>
+			<value>--password</value>
 			<value></value>
 		</list>
 	</property>
