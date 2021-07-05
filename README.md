@@ -656,17 +656,21 @@ memberVO.setUser_pw(userPwEncoder);
 #### 20210705(월) 작업예정
 - Deploy에서 에러 : No Web processes running
 - 현재 프로젝트에 클라우등요 설정파일이 필요 = 헤로쿠에서 Profile 확장자없는 설정파일이 필요
-- 위 Profile에서 web processes running 시키는 라인이 추가 되어야 함.
+- 위 Procfile에서 web processes running 시키는 라인이 추가 되어야 함.
 - 우리 프로젝트에서 클라우드용 설정파일이 필요 - 헤로쿠에서 Profile 확장자없는 설정파일이 필요
 - 위 Procfile에서 web processes running 시키는 라인이 추가되어야 함
 - 스프링에서 작업해서 배포한다는 의미 : ALL or Not ALL
 - PHP에서는 작업한 개별파일 1개씩 수정해서 올리는 방식이 아님 (워드프레스, 그누보드가 아님)
-- 스프링은 모든파일을 컴파일해서 패키징한 후, 업로드합니다
+- 스프링은 모든파일을 컴파일해서 패키징(war파일)한 후, 업로드합니다
 
 - Heroku Cloud에서 App생성
 - 우리 프로젝트에 HsqlDB를 생성 (Maven에서 Hsql모듈을 업데이트하면, 사용가능)
 - 오라클은 로컬에서 개발, HsqlDB는 Heroku Cloud용을 개발할 수 있도록 root-context.xml에서 설정예정
 - 현재까지 작업한 소스를 (자기 성함)kimsanghoon-spring5.herokuapp.com으로 배포할 예정
+- 아래 3가지가 root-context.xml에 추가됩니다.
+- 1. hsql용 jdbc드라이버를 스프링빈으로 생성하기
+- 2. DB생성 스크립트 실행
+- 3. DB매니저 실행하기
 - 관리자단 대시보드 작업예정
 - 사용자단 게시물관리 CRUD 작업예정
 - 사용자단 메인페이지(대시보드) 작업예정
