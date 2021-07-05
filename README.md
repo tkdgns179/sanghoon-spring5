@@ -654,6 +654,15 @@ memberVO.setUser_pw(userPwEncoder);
 - 프로토타입 작업시 주로 사용.(특징, 쿼리는 Mysql과 99% 동일)
 
 #### 20210705(월) 작업예정
+- Deploy에서 에러 : No Web processes running
+- 현재 프로젝트에 클라우등요 설정파일이 필요 = 헤로쿠에서 Profile 확장자없는 설정파일이 필요
+- 위 Profile에서 web processes running 시키는 라인이 추가 되어야 함.
+- 우리 프로젝트에서 클라우드용 설정파일이 필요 - 헤로쿠에서 Profile 확장자없는 설정파일이 필요
+- 위 Procfile에서 web processes running 시키는 라인이 추가되어야 함
+- 스프링에서 작업해서 배포한다는 의미 : ALL or Not ALL
+- PHP에서는 작업한 개별파일 1개씩 수정해서 올리는 방식이 아님 (워드프레스, 그누보드가 아님)
+- 스프링은 모든파일을 컴파일해서 패키징한 후, 업로드합니다
+
 - Heroku Cloud에서 App생성
 - 우리 프로젝트에 HsqlDB를 생성 (Maven에서 Hsql모듈을 업데이트하면, 사용가능)
 - 오라클은 로컬에서 개발, HsqlDB는 Heroku Cloud용을 개발할 수 있도록 root-context.xml에서 설정예정

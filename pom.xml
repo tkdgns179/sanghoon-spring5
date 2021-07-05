@@ -6,7 +6,9 @@
 	<artifactId>controller</artifactId>
 	<name>sanghoon-spring5</name>
 	<packaging>war</packaging>
-	<version>1.0.0-BUILD-SNAPSHOT</version>
+<!--<version>1.0.0-BUILD-SNAPSHOT</version>-->
+    <!-- heroku 추가 설정 -->
+	<version>edu_webapp_v1.0</version>
 	<properties>
 		<java-version>1.8</java-version>
 		<org.springframework-version>5.2.5.RELEASE</org.springframework-version>
@@ -200,6 +202,10 @@
 		
 	</dependencies>
     <build>
+    <!-- heroku 추가 설정 -->
+    <defaultGoal>install</defaultGoal>
+    <directory>${basedir}/target</directory>
+    <finalName>edu_webapp</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
