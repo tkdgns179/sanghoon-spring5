@@ -49,7 +49,6 @@ public class AspectAdvice {
 	// *(...)은 모든 메소드를 가르킴
 	@Around("execution(* com.edu.controller.*Controller.*(..))")
 	public Object sessionManager(ProceedingJoinPoint pjp) throws Throwable {
-		logger.info("무조건");
 		// board_type 변수값을 세션에 저장하려고 함 클라이언트 각자 발생
 		// HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();

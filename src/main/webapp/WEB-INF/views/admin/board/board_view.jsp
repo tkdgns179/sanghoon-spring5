@@ -322,8 +322,11 @@ var replyList = function() {
 				printPagingList(result.pageVO, '.pagination');
 			}
 		},
-		error: function() {
-			alert("RestAPI서버가 작동하지 않습니다 다음에 이용해주세요")
+		error: function(result) {
+			// 만약 json데이터에서 키 이름을 알게 되면, stringify 함수 필요없이 result.responseText 출력가능
+			alert(result.responseText);
+			// 단, 관리자단에서만 디버그하고, 사용자단에서는 아래 항목만 유지
+			alert("RestAPI서버가 작동하지 않습니다 다음에 이용해주세요 (0) ")
 		}
 	});
 }
@@ -354,7 +357,7 @@ $(document).ready(function(){
 				
 			},
 			error: function() {
-				alert("RestAPI서버가 작동하지 않습니다 다음에 이용해주세요")
+				alert("RestAPI서버가 작동하지 않습니다 다음에 이용해주세요 (1) ");
 			}
 			
 			
@@ -390,7 +393,7 @@ $(document).ready(function(){
 				}
 			},
 			error : function(){
-				alert("RestAPI서버가 작동하지 않습니다 잠시후 이용해주세요")
+				alert("RestAPI서버가 작동하지 않습니다 잠시후 이용해주세요 (3) ")
 			},
 		});
 	});

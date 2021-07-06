@@ -1,21 +1,29 @@
 package com.edu.controller;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //외부 라이브러리(모듈) 사용 = import
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.edu.service.BoardServiceImpl;
+import com.edu.service.IF_BoardService;
 import com.edu.service.IF_MemberService;
+import com.edu.vo.BoardVO;
 import com.edu.vo.MemberVO;
+import com.edu.vo.PageVO;
 
 /**
  * 이 클래스는 MVC웹프로젝트를 최초로 생성시 자동으로 생성되는 클래스
@@ -32,6 +40,9 @@ public class HomeController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	@Inject
 	IF_MemberService memberService;
+	@Autowired
+	IF_BoardService boardService;
+	
 	/**
 	 * 사용자요청(웹브라우저)을 받아서=@RequestMapping인테페이스를 사용해서 메서드명을 스프링이 구현합니다.
 	 *  ,router(루트rootX)
@@ -40,6 +51,22 @@ public class HomeController {
 	 */
 	// 이제부터 일반적인 개발방식 VO -> 쿼리 -> DAO ->Service (관리자단에서 여기까지 끝) 
 	// 관리자단에서 작성한 Service 사용자단에서 그대로 이용,  컨트롤러부터 분리해 작업 -> jsp
+	
+	@RequestMapping(value = "/home/board/board_list", method = RequestMethod.GET)
+	public String board_list(@ModelAttribute("pageVO")PageVO pageVO, Model model) throws Exception {
+		if(pageVO.getPage() == null ) {
+			pageVO.setPage(1);
+		}
+		// pageVO의 2개의 변수값을 필수로 설정해야함
+		pageVO.setQueryPerPageNum(5);
+		pageVO.setPerPageNum(5);
+		int totalCount = boardService.countBoard(pageVO);
+		pageVO.setTotalCount(totalCount); // 여기에서 startPage, endPage, prev, next 변수값이 발생함
+		logger.info(pageVO.toString());
+		List<BoardVO> boardList = boardService.selectBoard(pageVO);
+		model.addAttribute("boardList", boardList);
+		return "home/board/board_list";
+	}
 	
 	// 404 File Not Found 에러 처리하는 GET 호출 추가
 	@RequestMapping(value = "/home/error/error_404", method = RequestMethod.GET)
