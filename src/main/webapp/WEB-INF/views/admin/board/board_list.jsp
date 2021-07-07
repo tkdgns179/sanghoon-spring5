@@ -95,10 +95,14 @@
               	</c:if>
                 <!-- 아래 링크주소에 jsp에서 프로그램처리 예정 -->
                 <c:forEach var="boardVO" items="${listBoardVO}">
-                  <tr onclick="location.replace('/admin/board/board_view?bno=${boardVO.bno}&page=${pageVO.page}&search_type=${pageVO.search_type}')" style="cursor:pointer">
+                  <tr>
                     <td>${boardVO.bno}</td>
                     <td>${boardVO.board_type}</td>
-                    <td>${boardVO.title}</td>
+                    <td class="tit_notice">
+						<a href="/home/board/board_view?bno=${boardVO.bno}&page=${pageVO.page}&search_type=${pageVO.search_type}">
+						${boardVO.title}
+						</a> 
+					</td>
                     <td>${boardVO.writer}</td>
                     <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss.SSSS" value="${boardVO.reg_date}"/></td>
                   </tr>    
@@ -144,4 +148,4 @@
   <!-- /.content-wrapper -->
 
 
-<%@ include file= "../include/footer.jsp" %>
+<%@ include file="../include/footer.jsp" %>
