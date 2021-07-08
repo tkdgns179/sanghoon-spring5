@@ -73,7 +73,7 @@
          <p class="location">고객센터 <span class="path">/</span> 공지사항</p>
          <ul class="page_menu clear">
          <c:forEach var="boardTypeVO" items="${listBoardTypeVO}">
-             <li><a href="/home/board/board_list?board_type=${boardTypeVO.board_type}&search_keyword=" class="${boardTypeVO.board_name == session_board_type? 'on':''}">${boardTypeVO.board_name }</a></li>
+             <li><a href="/home/board/board_list?board_type=${boardTypeVO.board_type}&search_keyword=" class="${boardTypeVO.board_type == session_board_type? 'on':''}">${boardTypeVO.board_name }</a></li>
          </c:forEach>
          </ul>
      </div>

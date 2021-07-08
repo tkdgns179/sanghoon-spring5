@@ -42,8 +42,6 @@ import com.edu.vo.MemberVO;
 @Controller
 public class CommonUtil {
 	// 멤버변수 생성
-	@Resource(name = "uploadPath")
-	private String uploadPath; // root-context.xml 업로드경로 클래스빈 id값을 받아서 String변수 입력
 	
 	@Inject
 	private IF_MemberService memberService;
@@ -51,6 +49,9 @@ public class CommonUtil {
 	private IF_BoardDAO boardDAO;
 	
 	private Logger logger = LoggerFactory.getLogger(CommonUtil.class);
+	
+	@Resource(name = "uploadPath")
+	private String uploadPath; // root-context.xml 업로드경로 클래스빈 id값을 받아서 String변수 입력
 	
 	public String getUploadPath() {
 		return uploadPath;

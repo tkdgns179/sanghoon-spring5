@@ -31,7 +31,7 @@
 					<c:set var="extName" value="${fileNameArray[fn:length(fileNameArray)-1]}" />
 					<c:choose>
 						<c:when test="${fn:containsIgnoreCase(checkImgArray, extName)}">
-	           	    	<img alt="다운로드 이미지" style="display:block;" src="/image_preview?save_file_name=${boardVO.save_file_names[idx]}">
+	           	    	<img alt="다운로드 이미지" style="display:block; max-width:100%" src="/image_preview?save_file_name=${boardVO.save_file_names[idx]}">
 						</c:when>
 					</c:choose>
 					
@@ -47,7 +47,7 @@
 			</p>
 			<form name="hide_form" method="post" id="hide_form" action="">
 				<input type="hidden" name="bno"	value="${boardVO.bno}" >
-				<input type="hidden" name="page"value="${pageVO.page}" >
+				<input type="hidden" name="page" value="${pageVO.page}" >
 			</form>
 			<script>
 			$(document).ready(function(){
@@ -59,7 +59,10 @@
 					}
 				});
 				$("#btn_update").click(function(){
-					alert("수정 준비중입니다");
+					// alert("수정 준비중입니다");
+					form.attr("action", "/home/board/board_update_form");
+					form .attr("method", "get")
+					form.submit();
 				});
 			});
 			</script>

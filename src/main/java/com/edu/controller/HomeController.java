@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.edu.dao.BoardDAOImpl;
+import com.edu.dao.IF_BoardDAO;
 import com.edu.service.IF_BoardService;
 import com.edu.service.IF_MemberService;
 import com.edu.util.CommonUtil;
@@ -48,6 +50,8 @@ public class HomeController {
 	@Autowired
 	private IF_BoardService boardService;
 	@Inject
+	private IF_BoardDAO boardDAO;
+	@Inject
 	private CommonUtil commonUtil;
 	
 	/**
@@ -59,9 +63,80 @@ public class HomeController {
 	// 이제부터 일반적인 개발방식 VO -> 쿼리 -> DAO ->Service (관리자단에서 여기까지 끝) 
 	// 관리자단에서 작성한 Service 사용자단에서 그대로 이용,  컨트롤러부터 분리해 작업 -> jsp
 	
+	// 게시물 수정 처리 POST 추가
+	@RequestMapping(value = "/home/board/board_update", method = RequestMethod.POST)
+	public String board_update(@RequestParam("file")MultipartFile[] files, BoardVO boardVO,PageVO pageVO, RedirectAttributes rdat) throws Exception {
+		// 첨부파일처리 delFiles 만드는 이유는 첨부파일 수정시, 기존파일 삭제 후 입력
+		List<AttachVO> delFiles = boardService.readAttach(boardVO.getBno());
+		String[] save_file_names = new String[files.length]; // 전송된 파일이 없다면 null이들어감
+		String[] real_file_names = new String[files.length];
+		int idx = 0;
+		for (MultipartFile file : files) {
+			// 인덱스별로 
+			if(file.getOriginalFilename() != "") {
+				int del_idx = 0;
+				for(AttachVO delFile : delFiles) {
+					if (idx == del_idx) {
+						File target = new File(commonUtil.getUploadPath(), delFile.getSave_file_name());
+						if(target.exists()) {
+							target.delete();
+							boardDAO.deleteAttach(delFile.getSave_file_name()); // save_file_name이 PK값임
+						}
+					}
+					del_idx++;
+				}
+				// 신규파일 저장처리
+				save_file_names[idx] = commonUtil.fileUpload(file);
+				real_file_names[idx] = file.getOriginalFilename();
+			}
+			else {
+				save_file_names[idx] = null;
+				real_file_names[idx] = null;
+			}
+			idx++;
+		}
+		boardVO.setSave_file_names(save_file_names);
+		boardVO.setReal_file_names(real_file_names);
+		
+		String[] rawData = {boardVO.getTitle(), boardVO.getContent()};
+		for(int i=0; i < rawData.length; i++) {
+			rawData[i] = commonUtil.unScript(rawData[i]);
+		}
+		boardVO.setTitle(rawData[0]);
+		boardVO.setContent(rawData[1]);
+		logger.info(pageVO.toString());
+		// 게시판테이블처리
+		boardService.updateBoard(boardVO);
+		rdat.addFlashAttribute("msg", "게시물 수정"); // 출력메세지
+		return "redirect:/home/board/board_view?bno="+boardVO.getBno()+"&page="+pageVO.getPage(); // 수정 -> 뷰
+	}
+	
+	
+	// 게시물 수정 폼 호출 POST 추가
+	@RequestMapping(value = "/home/board/board_update_form", method = RequestMethod.GET)
+	public String board_update_form(Model model, @RequestParam("bno")Integer bno,@ModelAttribute("pageVO")PageVO pageVO) throws Exception {
+		// 1개의 레코드만 서비스로 호출합니다 첨부파일 세로데이터 가로데이터로 변경후 보내주어야함
+		BoardVO boardVO = new BoardVO();
+		boardVO = boardService.readBoard(bno);
+		// save_file_names, real_file_names를 가상필드값을 채웁니다
+		List<AttachVO> fileList = boardService.readAttach(bno);
+		String[] save_file_names = new String[fileList.size()]; 
+		String[] real_file_names = new String[fileList.size()]; 
+		int idx = 0;
+		for (AttachVO file : fileList) {
+			save_file_names[idx] = file.getSave_file_name();
+			real_file_names[idx] = file.getReal_file_name();
+			idx++;
+		}
+		boardVO.setSave_file_names(save_file_names);
+		boardVO.setReal_file_names(real_file_names);
+		model.addAttribute("boardVO", boardVO);
+		return "home/board/board_update";
+	}
+	
 	// @RequestMapping 요청 URL값
 	// public View(jsp) 파일명(String) 리턴 형식  콜백함수 (자동실행)
-	@RequestMapping(value = "/home/board/board_delete", method = RequestMethod.GET)
+	@RequestMapping(value = "/home/board/board_delete", method = RequestMethod.POST)
 	public String board_delete(@RequestParam("bno")Integer bno, RedirectAttributes rdat) throws Exception {
 		// 부모테이블 삭제 전, 삭제할 파일들 변수로 임시저장 ↓
 		List<AttachVO> delFiles = boardService.readAttach(bno);
@@ -70,7 +145,11 @@ public class HomeController {
 		// 첨부파일 있으면 삭제
 		for(AttachVO file : delFiles) {
 			// TODO 2021-07-08 이어서 함
-			File target = null;
+			// File 클래스는 new File(경로, 파일명)생성자로 인스턴스 할당
+			File target = new File(commonUtil.getUploadPath(), file.getSave_file_name());
+			if (target.exists()) { 	// 해당경로의 파일명이 존재한다면
+				target.delete();	// 물리적 파일을 삭제함
+			}
 		}
 		rdat.addFlashAttribute("msg", "게시물 삭제");
 		return "redirect:/home/board/board_list";
