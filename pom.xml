@@ -204,7 +204,19 @@
             <version>2.4.1</version>
         </dependency>
 		
+		<!-- 스프링 스케줄러 모듈 -->
+		<dependency>
+		    <groupId>org.quartz-scheduler</groupId>
+		    <artifactId>quartz</artifactId>
+		    <version>2.3.0</version>
+		</dependency>
 		
+		<!-- 스케줄러 서포트 모듈 추가 -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context-support</artifactId>
+		    <version>${org.springframework-version}</version>
+		</dependency>
 		
 	</dependencies>
     <build>

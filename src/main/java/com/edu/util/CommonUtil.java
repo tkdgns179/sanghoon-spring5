@@ -3,13 +3,17 @@ package com.edu.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -21,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,10 +33,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.edu.dao.IF_BoardDAO;
 import com.edu.service.IF_MemberService;
+import com.edu.vo.BoardVO;
 import com.edu.vo.MemberVO;
+import com.edu.vo.PageVO;
 
 /**
  * 이 클래스는 이 프로젝트에서 공통으로 사용하는 유틸리티 기능을 모아놓은 클래스입니다
@@ -193,6 +201,22 @@ public class CommonUtil {
 		return memberCnt; // 0.jsp로 가지않음 이유는 @ResponseBody 때문이고, RestAPI는 값만을 반환함
 	}
 	
+	// 사용자단에서 사용 : JsonView로 RestAPI구현
+	@RequestMapping(value = "id_check_2010", method = RequestMethod.GET)
+	public String id_check_2010(@RequestParam("user_id")String user_id, Model model) throws Exception {
+		
+		String memberCnt = "1"; // 중복ID가 있는 것을 기본값으로 설정
+		
+		if (!user_id.isEmpty()) {
+			MemberVO memberVO = memberService.readMember(user_id);
+			if (memberVO == null) {
+				memberCnt = "0";
+			}
+		}
+		model.addAttribute("memberCnt", memberCnt);
+		return "jsonView"; // servlet에서 정의한 스프링 빈ID를 적으면, json객체로 결과를 반환합니다
+	}
+	
 	// 파일 업로드 공통 메소드 (21-06-23 현재는 AdminController에서 사용하지만 HomeController에서도 사용할 예정임)
 	public String fileUpload(MultipartFile file) throws IOException {
 		// UUID클래스로 저장될 고유 식별(PK) 파일명을 생성 후 실제 물리적으로 저장
@@ -210,6 +234,16 @@ public class CommonUtil {
 		
 	}
 	
+	// 게시물 CRUD시 작성자가 본인인지 확인하는 메소드를 추가합니다
+	public String board_crud_check(HttpServletRequest request, BoardVO boardVO, PageVO pageVO, RedirectAttributes rdat) throws Exception {
+		HttpSession session = request.getSession();
+		// 로그인한 세션ID와 boardVO.writer사용자와 비교해서 같으면 계속진행하고, 틀리면 멈추도록 코드작성
+		if (!boardVO.getWriter().equals(session.getAttribute("session_userid"))) {
+			rdat.addFlashAttribute("msgError", "작성자가 아닙니다!");
+			return "redirect:/home/board/board_view?bno="+boardVO.getBno()+"&page="+pageVO.getPage();	
+		}
+		return "";
+	}
 	
 	
 }

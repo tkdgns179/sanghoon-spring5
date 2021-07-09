@@ -26,6 +26,7 @@
                         <tr>
                             <th scope="col">번호</th>
                             <th scope="col">제목</th>
+                            <th scope="col">작성자</th>
                             <th scope="col">조회수</th>
                             <th scope="col">작성일</th>
                         </tr>
@@ -36,6 +37,7 @@
                         	<!-- 전체게시물 - (현재페이지*1페이지당 보여줄 갯수) + 1페이지당 보여줄갯수 - 현재 인덱스 -->
                             <td>${pageVO.totalCount - (pageVO.page*pageVO.queryPerPageNum) + pageVO.queryPerPageNum - status.index}</td>
                             <td class="tit_notice"><a href="/home/board/board_view?bno=${boardVO.bno}&page=${pageVO.page}&search_type=${pageVO.search_type}">${boardVO.title}</a> </td>
+                            <td>${boardVO.writer}</td>
                             <td>${boardVO.view_count}</td>
                             <td>
                             <fmt:formatDate value="${boardVO.reg_date}" pattern="yyyy-MM-dd hh:mm:ss"/>

@@ -65,7 +65,15 @@ public class HomeController {
 	
 	// 게시물 수정 처리 POST 추가
 	@RequestMapping(value = "/home/board/board_update", method = RequestMethod.POST)
-	public String board_update(@RequestParam("file")MultipartFile[] files, BoardVO boardVO,PageVO pageVO, RedirectAttributes rdat) throws Exception {
+	public String board_update(HttpServletRequest request, @RequestParam("file")MultipartFile[] files, BoardVO boardVO,PageVO pageVO, RedirectAttributes rdat) throws Exception {
+		/* 주석내용을 AOP로 구현
+		 * // 로그인한 세션ID와 boardVO.writer사용자와 비교해서 같으면 계속진행하고, 틀리면 멈추도록 코드작성 HttpSession
+		 * session = request.getSession(); if
+		 * (!boardVO.getWriter().equals(session.getAttribute("session_userid"))) {
+		 * rdat.addFlashAttribute("msgError", "작성자가 아닙니다!");
+		 * 
+		 * return "redirect:"+request.getHeader("Referer"); }
+		 */
 		// 첨부파일처리 delFiles 만드는 이유는 첨부파일 수정시, 기존파일 삭제 후 입력
 		List<AttachVO> delFiles = boardService.readAttach(boardVO.getBno());
 		String[] save_file_names = new String[files.length]; // 전송된 파일이 없다면 null이들어감
@@ -114,10 +122,17 @@ public class HomeController {
 	
 	// 게시물 수정 폼 호출 POST 추가
 	@RequestMapping(value = "/home/board/board_update_form", method = RequestMethod.GET)
-	public String board_update_form(Model model, @RequestParam("bno")Integer bno,@ModelAttribute("pageVO")PageVO pageVO) throws Exception {
+	public String board_update_form(Model model,HttpServletRequest request, @RequestParam("bno")Integer bno,@ModelAttribute("pageVO")PageVO pageVO, RedirectAttributes rdat) throws Exception {
 		// 1개의 레코드만 서비스로 호출합니다 첨부파일 세로데이터 가로데이터로 변경후 보내주어야함
 		BoardVO boardVO = new BoardVO();
 		boardVO = boardService.readBoard(bno);
+		/* 주석내용을 AOP로 구현
+		 * HttpSession session = request.getSession(); // 로그인한 세션ID와 boardVO.writer사용자와
+		 * 비교해서 같으면 계속진행하고, 틀리면 멈추도록 코드작성 if
+		 * (!boardVO.getWriter().equals(session.getAttribute("session_userid"))) {
+		 * rdat.addFlashAttribute("msgError", "작성자가 아닙니다!"); return
+		 * "redirect:"+request.getHeader("Referer"); }
+		 */
 		// save_file_names, real_file_names를 가상필드값을 채웁니다
 		List<AttachVO> fileList = boardService.readAttach(bno);
 		String[] save_file_names = new String[fileList.size()]; 
@@ -137,7 +152,15 @@ public class HomeController {
 	// @RequestMapping 요청 URL값
 	// public View(jsp) 파일명(String) 리턴 형식  콜백함수 (자동실행)
 	@RequestMapping(value = "/home/board/board_delete", method = RequestMethod.POST)
-	public String board_delete(@RequestParam("bno")Integer bno, RedirectAttributes rdat) throws Exception {
+	public String board_delete(HttpServletRequest request, @RequestParam("bno")Integer bno, RedirectAttributes rdat, PageVO pageVO) throws Exception {
+		/* 주석내용을 AOP로 구현
+		 * BoardVO boardVO = boardService.readBoard(bno); HttpSession session =
+		 * request.getSession(); // 로그인한 세션ID와 boardVO.writer사용자와 비교해서 같으면 계속진행하고, 틀리면
+		 * 멈추도록 코드작성 if
+		 * (!boardVO.getWriter().equals(session.getAttribute("session_userid"))) {
+		 * rdat.addFlashAttribute("msgError", "작성자가 아닙니다!"); return
+		 * "redirect:"+request.getHeader("Referer"); }
+		 */
 		// 부모테이블 삭제 전, 삭제할 파일들 변수로 임시저장 ↓
 		List<AttachVO> delFiles = boardService.readAttach(bno);
 		// 테이블 1개 레코드 삭제처리

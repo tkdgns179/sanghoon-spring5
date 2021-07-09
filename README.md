@@ -703,3 +703,9 @@ memberVO.setUser_pw(userPwEncoder);
 - 이력서 작업한 URL을 포트폴리오로 적어 놓으실때, 면접관이 1분정도 대기시간이 필요.
 - 헤로쿠클라우드는 처음접속시 1분정도 대기시간이 필요함(이력서에 명시)
 
+- servlet-context-xml에 위 ViewResolver 라는 스프링빈 설정이 있습니다.
+- RequestMapping요청에 대한 뷰단을 해석(바인딩해줍니다)
+- 위 기능을 RestAPI로 대체해서 커늩롤러에서 뷰단을 반활할 떄 jsp로 반환하지 않고 json으로 뷰를 반환하는 것을 JsonView 방식이라고 합니다.
+- JsonView방식 사용방법: 1. servlet설정에 스프링빈을 등록합니다(클래스는 스프링프레임워크에 내장되어있음 pom.xml외부 라이브러리 모듈을 가져올 필요가없음)
+
+

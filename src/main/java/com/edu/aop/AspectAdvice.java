@@ -18,10 +18,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
+import com.edu.service.IF_BoardService;
 import com.edu.service.IF_BoardTypeService;
 import com.edu.vo.BoardTypeVO;
+import com.edu.vo.BoardVO;
 import com.edu.vo.PageVO;
 
 /**
@@ -38,6 +43,8 @@ public class AspectAdvice {
 	private Logger logger = LoggerFactory.getLogger(AspectAdvice.class);
 	@Inject
 	private IF_BoardTypeService boardTypeService;
+	@Inject
+	private IF_BoardService boardService;
 	
 	// 나중에 게시물관리 기능 만들 떄 @Aspect로 AOP기능 추가할 예정  board_type을 항상 가져가도록 처리함
 	// 세션 : Server - PC 구조상에서 클라이언트가 서버에 접속할 때 서버에 발생되는 정보를 세션이라고 함 -> 서버에 저장됨
@@ -47,6 +54,46 @@ public class AspectAdvice {
 	// @Around = @Befor + @After : @Around(포인트 컷의 전과 후를 가르킴  ) 
 	// @Around는 콜백함수 매개변수로 조인포인트객채(포인트컷에서 실행되는 메소드들)를 필수로 받습니다.
 	// *(...)은 모든 메소드를 가르킴
+	
+	// 아래 조인포인트(중단점)은 board_delete, board_update* 메소드를 실행할 때, 본인이 작성한 글인지 확인하는 기능을 추가함
+	// 단, ROLE_ADMIN 권한을 가지고 있는 사용자는 제외
+	@Around("execution(* com.edu.controller.HomeController.board_delete(..)) || execution(* com.edu.controller.HomeController.board_update*(..))")
+	public Object check_board_crud(ProceedingJoinPoint pjp) throws Throwable {
+		// request 객체는 (이전페이지 URL || 세션 값)을 가져오기 위함
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		// 참조값 null로 초기화
+		String user_id = null;
+		BoardVO boardVO = null;
+		logger.info("디버그 호출된 메서드 명은: "+pjp.getSignature().getName());
+		
+		for(Object object : pjp.getArgs()) {
+			if(object instanceof BoardVO) {
+				user_id = ((BoardVO) object).getWriter();
+			}
+			// 조인포인트 메소드의 매개변수가 object
+			if(object instanceof Integer) {
+				boardVO = boardService.readBoard((Integer) object);
+				user_id = boardVO.getWriter();
+			}
+		}
+		if (request != null) {
+			HttpSession session = request.getSession();
+			if (!user_id.equals(session.getAttribute("session_userid")) && "ROLE_USER".equals(session.getAttribute("session_levels"))) {
+				// 메세지를 redirect로  .addFlashAttribute로 지정해서 보냈음
+				// 그 대신 Flash라는 클래스를 사용해서 전달함
+				FlashMap flashMap = new FlashMap();
+                flashMap.put("msgError", "게시물은 본인글만 수정/삭제 가능합니다.");
+                FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
+                flashMapManager.saveOutputFlashMap(flashMap, request, null);
+
+				return "redirect:" + request.getHeader("Referer");
+			}
+		}
+		Object result = pjp.proceed();
+		return result;
+	}
+	
+	// 아래 조인포인트(중단점)은 검색어와 게시판타입의 값을 세션으로 유지시키는 기능
 	@Around("execution(* com.edu.controller.*Controller.*(..))")
 	public Object sessionManager(ProceedingJoinPoint pjp) throws Throwable {
 		// board_type 변수값을 세션에 저장하려고 함 클라이언트 각자 발생

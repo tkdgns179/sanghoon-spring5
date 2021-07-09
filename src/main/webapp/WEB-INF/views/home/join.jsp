@@ -115,7 +115,7 @@
                             </li>
                         </ul>
                         <p class="btn_line">
-                        <button class="btn_baseColor" id="btn_insert" disabled style="opacity:0.5;">회원가입</button>
+                        <button type="submit" class="btn_baseColor" id="btn_insert" disabled style="opacity:0.5;">회원가입</button>
                         </p>	
                     </fieldset>
                 </form>
@@ -129,17 +129,17 @@
 <%@ include file="./include/footer.jsp" %>
 <script>
 $(document).ready(function(){
-	$("#btn_insert").click(function(){
-		alert("준비중입니다")
-	});
 	$("#user_id_lbl").on("propertychange change keyup paste input", function(){
 		if ($(this).val() != "") {
 			$.ajax({
 				type: "get",
-				url: "/id_check?user_id="+$(this).val(),
-				dataType: "text",
+				url: "/id_check_2010?user_id="+$(this).val(),
+				dataType: "json",
 				success: function(result) {
-					if (result == 0) {
+					// alert(result) 현방식
+					// alert(result.memberCnt); 2010년도의 JsonView방식
+					// alert(JSON.stringify(result));
+					if (result.memberCnt == 0) {
 						$("#btn_insert").attr("disabled", false);
 						$("#btn_insert").css("opacity", "1");
 						$("#msg").remove();

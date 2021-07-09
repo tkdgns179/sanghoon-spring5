@@ -21,7 +21,18 @@
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/views/" />
 		<beans:property name="suffix" value=".jsp" />
+		<beans:property name="order" value="2"/>
 	</beans:bean>
+	<!-- 위의 ViewRosolver(해석기)는 .jsp로 바인딩되는 역할을 합니다, 그래서 ↑도 사용하고 아래 JsonView도 동시에 사용해야합니다 -->
+	
+	<!-- BeanNameViewResolver 설정추가 컨트롤러의 view이름을 파일명이 아닌 빈으로 리턴받을 수 있음.  -->
+	<beans:bean id="viewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+	  <beans:property name="order" value="1" />
+	</beans:bean>
+	<!-- MappingJackson2JsonView 설정추가 // 2010년 스프링 초창기 부터 사용했던 RestAPI구현방식입니다. // 컨트롤러에서 받는 값을 아래 빈의 id로 지정합니다-->
+	<!-- jsp에서 return값으로 사용함 -->
+	<beans:bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView"/>
+	
 	
 	<context:component-scan base-package="com.edu.controller" />
 	<context:component-scan base-package="com.edu.util" />
