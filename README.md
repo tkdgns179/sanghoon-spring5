@@ -708,4 +708,69 @@ memberVO.setUser_pw(userPwEncoder);
 - 위 기능을 RestAPI로 대체해서 커늩롤러에서 뷰단을 반활할 떄 jsp로 반환하지 않고 json으로 뷰를 반환하는 것을 JsonView 방식이라고 합니다.
 - JsonView방식 사용방법: 1. servlet설정에 스프링빈을 등록합니다(클래스는 스프링프레임워크에 내장되어있음 pom.xml외부 라이브러리 모듈을 가져올 필요가없음)
 
+#### 20210709(금) 작업
+- 게시물 CRUD시 본인글 인지 확인 하는 메서드를 공통으로 구현하기(많이사용하는 방향으로)OK.
+
+```
+@Around("execution(* com.edu.controller.HomeController.board_delete(..)) || execution(* com.edu.controller.HomeController.board_update*(..))")
+    public Object board_deleteMethod(ProceedingJoinPoint pjp) throws Throwable {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+		if(request != null) {//jsp에서 Get,Post 있을때,
+			BoardVO boardVO = null;
+			String user_id = null;
+			Integer bno = null;
+			logger.info("디버그 메서드네임 가져오기 : " + pjp.getSignature().getName());//기술참조 https://alwayspr.tistory.com/34
+			for(Object object:pjp.getArgs()) {
+				if(object instanceof Integer) {//AOP실행메서드중 매개변수 판단
+					//파마미터가 bno일때 게시판의 writer를 가져오기
+					bno = (Integer) object;
+					boardVO = boardService.readBoard(bno);//아래 조건때문에 추가
+					user_id = boardVO.getWriter();
+				}
+				if(object instanceof BoardVO) {
+					//파라미터가 BoardVO 클래스객체 일때 writer를 가져오기
+					boardVO = (BoardVO) object;
+					user_id = boardVO.getWriter();
+				}
+			}
+			HttpSession session = request.getSession();//클라이언트PC에서 스프링프로젝트 접근시 세션객체
+			if( !user_id.equals(session.getAttribute("session_userid")) && "ROLE_USER".equals(session.getAttribute("session_levels")) ) {
+				FlashMap flashMap = new FlashMap();
+				flashMap.put("msgError", "게시물은 본인글만 수정/삭제 가능합니다.");
+				FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
+				flashMapManager.saveOutputFlashMap(flashMap, request, null);
+				String referer = request.getHeader("Referer");//크롬>네트워크>파일>Referer>이전페이지 URL이 존재
+				return "redirect:"+referer;
+			}
+		}
+		Object result = pjp.proceed();//여기서 조인포인트가 실행됩니다.
+		return result;
+	}
+```
+- 사용자단 댓글서비스 작업.(기술참조: http://www.ktword.co.kr/abbr_view.php?m_temp1=5782 )
+- Ajax소스는 프로그램이기 때문에, 디자인과 크게관련없기때문에, admin단 board_view에 있는 
+- ajax코드를 가져다가 사용하면서 커스터마이징.($.ajax에서 complete, beforeSend, async 속성들)
+- ajax에서 디버그하는 방법.
+- 헤로쿠 30분 지나서 휴면모드로 들어가기전, 잠깨우는 기능 추가예정.(스프링 스케줄링사용)
+- 순서1: 외부 모듈 라이브러리 추가(pom.xml에서) -> 메이븐업데이트 -> 
+- 순서2: 스케줄링할 메서드 생성(herokuJobMethod) -> root-context에서 스케줄링 스프링빈 생성
+- 보통 스프링스케줄러를 이용해서 회원들에게 시간기준의 특별한 이벤트가 발생할때, 일괄적으로 메일보내기 기능에 사용.
+- 이력서 작업한 URL을 포트폴리오로 적어 놓으실때, 면접관이 1분정도 대기시간이 필요.
+- 헤로쿠클라우드는 처음접속시 1분정도 대기시간이 필요함(이력서에 명시)
+
+#### 20210713(화) 작업
+- 사용자단 메인페이지(대시보드) 작업OK.
+- 사용자단 네이버아이디로그인 처리(10.외부RestAPI구현).
+- 네이버 개발자 센터에 가입이 되어 있어야 합니다.
+- 서비스URL(사이트의 로그인URL) -> 네이버로그인폼으로진행(스프링시큐리티로그인무시)
+- 네이버로그인폼에서 인증을 받으면(RestAPI에서 OAuth2.0인증) -> 서비스되는 사이트로 돌아오기(사이트URL필요=@RequestMapping필요=콜백URL필요):시프링시큐리티 로직을 타야 합니다.
+- 콜백메서드에서 하는 작업: enabled, ROLE_USER권하부여 , session_값 지정을 할 수 있습니다.
+- login_success는 스프링시큐리티의 인증성공 후 이동할 URL위치를 구현한 메서드
+- naver_callback은 네이버OAuth2.0 인증성공 후 이동할 URL위치를 구현한 메서드
+
+#### 20210714(수) 작업
+- 네아로 로그인 부분 마무리.
+- 문서작업(제출용)예정.
+- 관리자대시보드에서 회원ID 이미지업로드 및 보이기 처리예정.
+- jsp템플릿인 tiles(타일즈) 사용.
 

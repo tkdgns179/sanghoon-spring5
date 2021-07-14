@@ -40,7 +40,7 @@
 				</c:if> 
 				</c:forEach>
 			</ul>
-			<p class="btn_line txt_right" style="text-align:right">
+			<p class="btn_line text-right">
 				<a href="/home/board/board_list?page=${pageVO.page}&search_type=${pageVO.search_type}" class="btn btn-default" >목록</a>
 				<button type="button" id="btn_delete" class="btn btn-danger">삭제</button>
 				<button type="button" id="btn_update" class="btn btn-primary">수정</button>
@@ -310,7 +310,7 @@ $(document).ready(function(){
 		var rno = $("#rno").val();//modal내 input태그로 추가
 		if(reply_text == '' || rno == '') {//&& and, || or
 			//위 조건 2중에 1개라도 만족하면 아래 내용이 실행
-			alert("댓글내용은 공백이면 않됩니다.");
+			alert("댓글내용은 공백이면 안됩니다.");
 			return false;//더이상 실행없이 콜백함수를 빠져 나갑니다.
 		}
 		$.ajax({
