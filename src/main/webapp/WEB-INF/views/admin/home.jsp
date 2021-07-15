@@ -46,8 +46,12 @@
             <ul class="users-list clearfix">
           <!-- 최신 등록한 회원정보 4개 출력 반복문 사용 -->
           <c:forEach var="memberVO" items="${latestMembers}">
-              <li onclick="location.replace('/admin/member/member_view?user_id=${memberVO.user_id}')" style="cursor: pointer;">
-                <img src="/resources/admin/dist/img/default-150x150.png" alt="User Image">
+              <li onclick="location.replace('/admin/member/member_view?user_id=${memberVO.user_id}&page=1')" style="cursor: pointer;">
+              	<!-- 
+              	<img alt="" src="/resources/admin/dist/img/default-150x150.png">
+               	-->	
+               	<!-- onerror 속성 : 엑박나올 때 처리해주는 속성 -->
+                <img style="width:120px; height:120px;" onerror="this.src='/resources/admin/dist/img/default-150x150.png'" src="/resources/profile/${memberVO.user_id}.png" alt="User Image">
                 <a class="users-list-name" href="">${memberVO.user_name }</a>
                 <span class="users-list-date">
                 <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${memberVO.reg_date}"/>

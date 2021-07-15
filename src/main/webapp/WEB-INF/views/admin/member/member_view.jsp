@@ -16,7 +16,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active"> 회원 상세보기</li>
+              <li class="breadcrumb-item active"> 관리자관리 </li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -37,6 +37,9 @@
           <!-- enctype 필수 없으면 첨부파일이 전송X -->
           <form id="form_view" name="form_view" action="/admin/member/member_update_form" method="get" enctype="multipart/form-data">
             <div class="card-body">
+              <div class="form-group">
+              <img style="border-radius:70%; width:120px; height:120px;" onerror="this.src='/resources/admin/dist/img/default-150x150.png'" src="/resources/profile/${memberVO.user_id}.png" alt="User Image">
+              </div>
               <div class="form-group">
                 <label for="exampleInputEmail1">사용자ID</label>
                 <br>
