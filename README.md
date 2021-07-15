@@ -774,3 +774,15 @@ memberVO.setUser_pw(userPwEncoder);
 - 관리자대시보드에서 회원ID 이미지업로드 및 보이기 처리예정.
 - jsp템플릿인 tiles(타일즈) 사용.
 
+#### 데이터의 이동 (MVC - Model View Controller)
+-  VO클래스의 이동: 매퍼쿼리 <->  DAO(Model) <-> Service <-> Controller <-> jsp(View)
+
+#### 변수값(데이터) ReplyVO 데이터클래스를 기준으로
+- JSON데이터 : 크롬에서 부메랑으로 List<ReplyVO> replyList = new ArrayList<ReplyVO>(); // DB쿼리 결과
+- JSON데이터구조  : ArrayList(index, value) + HashMap(key, value) 
+
+- 위  ArrayList구조 : List(인터페이스) > ArrayList(구현클래스)
+- HashMap 데이터형 : Map<String, Object> mapData = new HashMap<String, Object>();
+- 위 HashMap구조 : Map(인터페이스 - 메소드명) > HashMap(구현클래스)
+- Hash(e.g. 해시태그) : 그물망, 잘게 쪼갠(해시) = (x, y) = (key : value)
+
